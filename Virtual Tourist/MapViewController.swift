@@ -85,14 +85,16 @@ class MapViewController: UIViewController,  MKMapViewDelegate, UIGestureRecogniz
 	
 	@IBAction func enableEditing(sender: AnyObject) {
 		print("edit button pressed")
+		let title = editButton.attributedTitleForState(UIControlState.Normal)?.mutableCopy() as! NSMutableAttributedString
 		switch currentMode {
 		case Mode.Normal:
 			currentMode = Mode.Editing
-			editButton.setTitle("Done", forState: UIControlState.Normal)
+			title.replaceCharactersInRange(NSRange(location: 0,length: title.length), withString: "Done")
 		case Mode.Editing:
 			currentMode = Mode.Normal
-			editButton.setTitle("Edit", forState: UIControlState.Normal)
+			title.replaceCharactersInRange(NSRange(location: 0,length: title.length), withString: "Edit")
 		}
+		editButton.setAttributedTitle(title as NSAttributedString, forState: UIControlState.Normal)
 	}
 	
 	
