@@ -125,9 +125,12 @@ class MapViewController: UIViewController,  MKMapViewDelegate, UIGestureRecogniz
 
 	
 	func mapView(mapView: MKMapView, didSelectAnnotationView view: MKAnnotationView) {
-		print("select")
 		let annotation = view.annotation as? FlickrAnnotation
 		print(annotation?.pin.id.stringValue)
+		print(self.fetchedResultsController.indexPathForObject((annotation?.pin)!))
+		let controller = self.storyboard!.instantiateViewControllerWithIdentifier("PhotoAlbumViewController") as! PhotoAlbumViewController
+		controller.pin = annotation?.pin
+		self.presentViewController(controller, animated: true, completion: nil)
 	}
 }
 
