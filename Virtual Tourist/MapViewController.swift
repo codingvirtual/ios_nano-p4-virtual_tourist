@@ -86,15 +86,14 @@ class MapViewController: UIViewController,  MKMapViewDelegate, UIGestureRecogniz
 	
 	func createPin(pinData: Pin) {
 		// refresh the map with the stored pins from CoreData
-		
-
-		var annotation = FlickrAnnotation(withPin: pinData)
-
+		let annotation = FlickrAnnotation(withPin: pinData)
 		self.mapView.addAnnotation(annotation)
 	}
 	
 	func deletePin(thePin: Pin) {
-		
+		// TODO: delete the annotation first.
+		sharedContext.deleteObject(thePin)
+		CoreDataStackManager.sharedInstance().saveContext()
 	}
 	
 	@IBAction func longPress(sender: AnyObject) {
@@ -102,25 +101,17 @@ class MapViewController: UIViewController,  MKMapViewDelegate, UIGestureRecogniz
 		let recognizer: UILongPressGestureRecognizer = sender as! UILongPressGestureRecognizer
 		let point: CGPoint = recognizer.locationInView(mapView)
 		let locCoords: CLLocationCoordinate2D = mapView.convertPoint(point, toCoordinateFromView: mapView)
-		let annotation = FlickrAnnotation()
-		annotation.coordinate = locCoords
+		let newPin = Pin(dictionary: [
+			Pin.Keys.Longitude : locCoords.longitude,
+			Pin.Keys.Latitude : locCoords.latitude
+			], context: self.sharedContext)
+		sharedContext.insertObject(newPin)
+		CoreDataStackManager.sharedInstance().saveContext()
+		let annotation = FlickrAnnotation(withPin: newPin)
 		self.mapView.addAnnotation(annotation)
 	}
 	
-	func addNewPin(id:NSNumber!) {
-		let dictionary: [String : AnyObject] = [
-			Pin.Keys.ID : id
-		]
-		
-		// Now we create a new Person, using the shared Context
-		let pinToBeAdded = Pin(dictionary: dictionary, context: sharedContext)
-		
-		sharedContext.insertObject(pinToBeAdded)
-		
-		CoreDataStackManager.sharedInstance().saveContext()
-		print("pin added")
-	}
-	
+
 	// MARK: - MKMapViewDelegate
 
 	

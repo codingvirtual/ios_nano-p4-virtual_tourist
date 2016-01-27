@@ -45,7 +45,7 @@ class Pin : NSManagedObject {   // 2.
 		super.init(entity: entity, insertIntoManagedObjectContext: context)
 		
 		// Dictionary
-		id = dictionary[Keys.ID] as! NSNumber
+//		id = dictionary[Keys.ID] as! NSNumber
 //		photos = dictionary[Keys.Photos] as! [Photo]
 		latitude = dictionary[Keys.Latitude] as! NSNumber
 		longitude = dictionary[Keys.Longitude] as! NSNumber
