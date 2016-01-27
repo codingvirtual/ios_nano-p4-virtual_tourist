@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3746910F1C591408007EE59B /* FlickrAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3746910E1C591408007EE59B /* FlickrAnnotation.swift */; };
 		376657881C4E489C00041954 /* PhotoAlbumViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 376657871C4E489C00041954 /* PhotoAlbumViewController.swift */; };
 		37ABDF321C4E3FD7002D2CCD /* CoreDataStackManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37ABDF311C4E3FD7002D2CCD /* CoreDataStackManager.swift */; };
 		37C1CE161C4FFB4E00610E5A /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 37C1CE151C4FFB4E00610E5A /* MapKit.framework */; };
@@ -41,6 +42,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		3746910E1C591408007EE59B /* FlickrAnnotation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FlickrAnnotation.swift; sourceTree = "<group>"; };
 		376657871C4E489C00041954 /* PhotoAlbumViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotoAlbumViewController.swift; sourceTree = "<group>"; };
 		37ABDF311C4E3FD7002D2CCD /* CoreDataStackManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataStackManager.swift; sourceTree = "<group>"; };
 		37C1CE151C4FFB4E00610E5A /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
@@ -89,6 +91,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		37572A101C57BB4700D3E7EE /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				37F1140C1C57062200354D8B /* FlickrService.swift */,
+			);
+			name = Services;
+			sourceTree = "<group>";
+		};
 		37ABDF2F1C4E3F7D002D2CCD /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
@@ -131,6 +141,7 @@
 		37FDD9021C32FD71000F5C88 /* Virtual Tourist */ = {
 			isa = PBXGroup;
 			children = (
+				37572A101C57BB4700D3E7EE /* Services */,
 				37ABDF301C4E3F89002D2CCD /* Views */,
 				37ABDF2F1C4E3F7D002D2CCD /* Controllers */,
 				37FDD9371C3340CD000F5C88 /* Models */,
@@ -174,7 +185,7 @@
 			children = (
 				37FDD9381C3340E0000F5C88 /* Pin.swift */,
 				37FDD93A1C3340ED000F5C88 /* Photo.swift */,
-				37F1140C1C57062200354D8B /* FlickrService.swift */,
+				3746910E1C591408007EE59B /* FlickrAnnotation.swift */,
 			);
 			name = Models;
 			sourceTree = "<group>";
@@ -315,6 +326,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3746910F1C591408007EE59B /* FlickrAnnotation.swift in Sources */,
 				37FDD9061C32FD71000F5C88 /* MapViewController.swift in Sources */,
 				376657881C4E489C00041954 /* PhotoAlbumViewController.swift in Sources */,
 				37F1140D1C57062200354D8B /* FlickrService.swift in Sources */,
