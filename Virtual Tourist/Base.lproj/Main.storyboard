@@ -28,18 +28,23 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
-                    <navigationItem key="navigationItem" id="uXk-95-Qh2">
-                        <barButtonItem key="rightBarButtonItem" style="plain" id="zCo-op-Tde">
+                    <navigationItem key="navigationItem" title="Virtual Tourist" id="uXk-95-Qh2">
+                        <barButtonItem key="rightBarButtonItem" id="zCo-op-Tde">
                             <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="qer-hg-og1">
-                                <rect key="frame" x="447" y="7" width="133" height="30"/>
+                                <rect key="frame" x="520" y="7" width="60" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="15"/>
                                 <state key="normal" title="Edit"/>
+                                <connections>
+                                    <action selector="enableEditing:" destination="BYZ-38-t0r" eventType="touchUpInside" id="cFL-vB-qgs"/>
+                                </connections>
                             </button>
                         </barButtonItem>
                     </navigationItem>
                     <connections>
+                        <outlet property="editButton" destination="qer-hg-og1" id="gLH-nG-oMA"/>
                         <outlet property="mapView" destination="Spa-7V-WtI" id="5gY-eO-WKT"/>
-                        <segue destination="Ffu-7v-k6v" kind="showDetail" id="sI2-h0-0Ul"/>
+                        <segue destination="Ffu-7v-k6v" kind="showDetail" identifier="AlbumViewSegue" id="sI2-h0-0Ul"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
@@ -72,7 +77,7 @@
                                     <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 </collectionViewFlowLayout>
                                 <cells>
-                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="2JC-2L-6wU">
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="Thumbnail" id="2JC-2L-6wU">
                                         <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">

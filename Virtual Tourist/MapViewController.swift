@@ -14,6 +14,12 @@ class MapViewController: UIViewController,  MKMapViewDelegate, UIGestureRecogniz
 	
 	// MARK: - Variables and Outlets
 	
+	enum Mode {
+		case Normal, Editing
+	}
+	
+	var currentMode: Mode = Mode.Normal
+	
 	lazy var fetchedResultsController: NSFetchedResultsController = {
 		
 		// Create the fetch request
@@ -29,6 +35,8 @@ class MapViewController: UIViewController,  MKMapViewDelegate, UIGestureRecogniz
 	} ()
 	
 	@IBOutlet weak var mapView: MKMapView!
+	
+	@IBOutlet weak var editButton: UIButton!
 	
 	var sharedContext: NSManagedObjectContext {
 		return CoreDataStackManager.sharedInstance().managedObjectContext
@@ -75,6 +83,19 @@ class MapViewController: UIViewController,  MKMapViewDelegate, UIGestureRecogniz
 		self.mapView.addAnnotation(annotation)
 	}
 	
+	@IBAction func enableEditing(sender: AnyObject) {
+		print("edit button pressed")
+		switch currentMode {
+		case Mode.Normal:
+			currentMode = Mode.Editing
+			editButton.setTitle("Done", forState: UIControlState.Normal)
+		case Mode.Editing:
+			currentMode = Mode.Normal
+			editButton.setTitle("Edit", forState: UIControlState.Normal)
+		}
+	}
+	
+	
 	// MARK: - Fetched Results Controller Delegate
 	
 	
@@ -83,14 +104,10 @@ class MapViewController: UIViewController,  MKMapViewDelegate, UIGestureRecogniz
 		// until it receives endUpdates(), and then perform them all at once.
 		print("controller will change content")
 	}
-	
-	func controller(controller: NSFetchedResultsController, didChangeSection sectionInfo: NSFetchedResultsSectionInfo, atIndex sectionIndex: Int, forChangeType type: NSFetchedResultsChangeType) {
-		// Our project does not use sections. So we can ignore these invocations.
-	}
-	
+
 
 	func controller(controller: NSFetchedResultsController, didChangeObject anObject: AnyObject, atIndexPath indexPath: NSIndexPath?, forChangeType type: NSFetchedResultsChangeType, newIndexPath: NSIndexPath?) {
-		print(anObject)
+		print("controller did change object")
 		switch type {
 		case .Insert:
 			createPin(anObject as! Pin)
@@ -121,12 +138,17 @@ class MapViewController: UIViewController,  MKMapViewDelegate, UIGestureRecogniz
 	// MARK: - MKMapViewDelegate
 
 	func mapView(mapView: MKMapView, didSelectAnnotationView view: MKAnnotationView) {
-		let annotation = view.annotation as? FlickrAnnotation
-		print(annotation?.pin.id!.stringValue)
-		print(self.fetchedResultsController.indexPathForObject((annotation?.pin)!))
-		let controller = self.storyboard!.instantiateViewControllerWithIdentifier("PhotoAlbumViewController") as! PhotoAlbumViewController
-		controller.pin = annotation?.pin
-		self.presentViewController(controller, animated: true, completion: nil)
+		switch currentMode {
+		case Mode.Normal:
+			let annotation = view.annotation as? FlickrAnnotation
+			print(annotation?.pin.id!.stringValue)
+			print(self.fetchedResultsController.indexPathForObject((annotation?.pin)!))
+			let controller = self.storyboard!.instantiateViewControllerWithIdentifier("PhotoAlbumViewController") as! PhotoAlbumViewController
+			controller.pin = annotation?.pin
+			self.presentViewController(controller, animated: true, completion: nil)
+		case Mode.Editing:
+			print("delete this")
+		}
 	}
 }
 
