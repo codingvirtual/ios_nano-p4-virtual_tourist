@@ -28,7 +28,15 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
-                    <navigationItem key="navigationItem" id="uXk-95-Qh2"/>
+                    <navigationItem key="navigationItem" id="uXk-95-Qh2">
+                        <barButtonItem key="rightBarButtonItem" style="plain" id="zCo-op-Tde">
+                            <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="qer-hg-og1">
+                                <rect key="frame" x="447" y="7" width="133" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Edit"/>
+                            </button>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
                         <outlet property="mapView" destination="Spa-7V-WtI" id="5gY-eO-WKT"/>
                         <segue destination="Ffu-7v-k6v" kind="showDetail" id="sI2-h0-0Ul"/>
@@ -41,7 +49,7 @@
                     </connections>
                 </pongPressGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="1158" y="910"/>
+            <point key="canvasLocation" x="328" y="1748"/>
         </scene>
         <!--PhotoAlbumViewController-->
         <scene sceneID="V8z-tv-3fX">
@@ -81,7 +89,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="hkz-bK-fAm" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1932" y="904"/>
+            <point key="canvasLocation" x="1250" y="1776"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="hTn-LJ-4HX">

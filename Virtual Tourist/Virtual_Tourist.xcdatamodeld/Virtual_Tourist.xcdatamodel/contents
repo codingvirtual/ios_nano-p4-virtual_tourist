@@ -6,12 +6,12 @@
     </entity>
     <entity name="Pin" representedClassName=".Pin" syncable="YES">
         <attribute name="id" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
-        <attribute name="latitude" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
-        <attribute name="longitude" optional="YES" attributeType="Double" defaultValueString="0" syncable="YES"/>
+        <attribute name="latitude" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="longitude" attributeType="Double" defaultValueString="0" syncable="YES"/>
         <relationship name="photos" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Photo" inverseName="location" inverseEntity="Photo" syncable="YES"/>
     </entity>
     <elements>
         <element name="Photo" positionX="-1755" positionY="-1251" width="128" height="73"/>
-        <element name="Pin" positionX="-1764" positionY="-1269" width="128" height="103"/>
+        <element name="Pin" positionX="-1764" positionY="-1269" width="128" height="105"/>
     </elements>
 </model>

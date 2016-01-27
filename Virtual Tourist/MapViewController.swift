@@ -12,6 +12,7 @@ import MapKit
 
 class MapViewController: UIViewController,  MKMapViewDelegate, UIGestureRecognizerDelegate, NSFetchedResultsControllerDelegate {
 	
+	// MARK: - Variables and Outlets
 	
 	lazy var fetchedResultsController: NSFetchedResultsController = {
 		
@@ -33,6 +34,8 @@ class MapViewController: UIViewController,  MKMapViewDelegate, UIGestureRecogniz
 		return CoreDataStackManager.sharedInstance().managedObjectContext
 	}
 	
+	// MARK: - Controller overrides
+	
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		
@@ -52,13 +55,28 @@ class MapViewController: UIViewController,  MKMapViewDelegate, UIGestureRecogniz
 		}
 	}
 	
+	override func viewWillAppear(animated: Bool) {
+		super.viewWillAppear(animated)
+	}
+	// MARK: - UI-related Code
+	
+	@IBAction func longPress(sender: AnyObject) {
+		print("long press detected")
+		let recognizer: UILongPressGestureRecognizer = sender as! UILongPressGestureRecognizer
+		let point: CGPoint = recognizer.locationInView(mapView)
+		let locCoords: CLLocationCoordinate2D = mapView.convertPoint(point, toCoordinateFromView: mapView)
+		let newPin = Pin(dictionary: [
+			Pin.Keys.Longitude : locCoords.longitude,
+			Pin.Keys.Latitude : locCoords.latitude
+			], context: self.sharedContext)
+		sharedContext.insertObject(newPin)
+		CoreDataStackManager.sharedInstance().saveContext()
+		let annotation = FlickrAnnotation(withPin: newPin)
+		self.mapView.addAnnotation(annotation)
+	}
+	
 	// MARK: - Fetched Results Controller Delegate
 	
-	//
-	// Change 3: Implement the delegate protocol methods
-	//
-	// These are the four methods that the Fetched Results Controller invokes on this view controller.
-	//
 	
 	func controllerWillChangeContent(controller: NSFetchedResultsController) {
 		// This invocation prepares the table to recieve a number of changes. It will store them up
@@ -84,6 +102,8 @@ class MapViewController: UIViewController,  MKMapViewDelegate, UIGestureRecogniz
 		}
 	}
 	
+	// MARK: - Pin Functionality
+	
 	func createPin(pinData: Pin) {
 		// refresh the map with the stored pins from CoreData
 		let annotation = FlickrAnnotation(withPin: pinData)
@@ -95,29 +115,14 @@ class MapViewController: UIViewController,  MKMapViewDelegate, UIGestureRecogniz
 		sharedContext.deleteObject(thePin)
 		CoreDataStackManager.sharedInstance().saveContext()
 	}
-	
-	@IBAction func longPress(sender: AnyObject) {
-		print("long press detected")
-		let recognizer: UILongPressGestureRecognizer = sender as! UILongPressGestureRecognizer
-		let point: CGPoint = recognizer.locationInView(mapView)
-		let locCoords: CLLocationCoordinate2D = mapView.convertPoint(point, toCoordinateFromView: mapView)
-		let newPin = Pin(dictionary: [
-			Pin.Keys.Longitude : locCoords.longitude,
-			Pin.Keys.Latitude : locCoords.latitude
-			], context: self.sharedContext)
-		sharedContext.insertObject(newPin)
-		CoreDataStackManager.sharedInstance().saveContext()
-		let annotation = FlickrAnnotation(withPin: newPin)
-		self.mapView.addAnnotation(annotation)
-	}
+
 	
 
 	// MARK: - MKMapViewDelegate
 
-	
 	func mapView(mapView: MKMapView, didSelectAnnotationView view: MKAnnotationView) {
 		let annotation = view.annotation as? FlickrAnnotation
-		print(annotation?.pin.id.stringValue)
+		print(annotation?.pin.id!.stringValue)
 		print(self.fetchedResultsController.indexPathForObject((annotation?.pin)!))
 		let controller = self.storyboard!.instantiateViewControllerWithIdentifier("PhotoAlbumViewController") as! PhotoAlbumViewController
 		controller.pin = annotation?.pin
