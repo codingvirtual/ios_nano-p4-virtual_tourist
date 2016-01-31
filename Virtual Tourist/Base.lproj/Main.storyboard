@@ -3,6 +3,7 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9529"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
         <!--MapViewController-->
@@ -17,7 +18,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" mapType="standard" showsBuildings="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Spa-7V-WtI">
+                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" showsBuildings="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Spa-7V-WtI">
                                 <rect key="frame" x="0.0" y="64" width="600" height="536"/>
                                 <gestureRecognizers/>
                                 <connections>
@@ -25,8 +26,27 @@
                                     <outletCollection property="gestureRecognizers" destination="yWL-uc-etO" appends="YES" id="hAD-mN-dV8"/>
                                 </connections>
                             </mapView>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="Here I am" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="xTl-eM-fgj">
+                                <rect key="frame" x="0.0" y="600" width="600" height="30"/>
+                                <color key="backgroundColor" red="1" green="0.4122511043" blue="0.060857454999999998" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="30" id="3Ua-3i-1hX"/>
+                                </constraints>
+                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="Spa-7V-WtI" firstAttribute="bottom" secondItem="wfy-db-euE" secondAttribute="top" id="0Oo-Sg-PUW"/>
+                            <constraint firstItem="xTl-eM-fgj" firstAttribute="top" secondItem="wfy-db-euE" secondAttribute="top" id="1Ku-cw-StY"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="Spa-7V-WtI" secondAttribute="trailing" constant="-20" id="A43-p5-Cgk"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="xTl-eM-fgj" secondAttribute="trailing" constant="-20" id="PBm-Ec-hUh"/>
+                            <constraint firstItem="Spa-7V-WtI" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" id="Unm-xt-HLp"/>
+                            <constraint firstItem="xTl-eM-fgj" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="-20" id="nfn-L6-kEL"/>
+                            <constraint firstItem="Spa-7V-WtI" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="-20" id="wmM-R1-FHg"/>
+                        </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Virtual Tourist" id="uXk-95-Qh2">
                         <barButtonItem key="rightBarButtonItem" id="zCo-op-Tde">
@@ -51,6 +71,7 @@
                     <connections>
                         <outlet property="editButton" destination="qer-hg-og1" id="gLH-nG-oMA"/>
                         <outlet property="mapView" destination="Spa-7V-WtI" id="5gY-eO-WKT"/>
+                        <outlet property="messageField" destination="xTl-eM-fgj" id="3E8-Yt-Vpx"/>
                         <segue destination="Ffu-7v-k6v" kind="showDetail" identifier="AlbumViewSegue" id="sI2-h0-0Ul"/>
                     </connections>
                 </viewController>

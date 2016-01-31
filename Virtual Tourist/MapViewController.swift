@@ -38,6 +38,8 @@ class MapViewController: UIViewController,  MKMapViewDelegate, UIGestureRecogniz
 	
 	@IBOutlet weak var editButton: UIButton!
 	
+	@IBOutlet weak var messageField: UITextField!
+	
 	var sharedContext: NSManagedObjectContext {
 		return CoreDataStackManager.sharedInstance().managedObjectContext
 	}
@@ -61,10 +63,14 @@ class MapViewController: UIViewController,  MKMapViewDelegate, UIGestureRecogniz
 		for aPin in fetchedResultsController.fetchedObjects as! [Pin] {
 			createPin(aPin)
 		}
+		
+		
+
 	}
 	
 	override func viewWillAppear(animated: Bool) {
 		super.viewWillAppear(animated)
+
 	}
 	// MARK: - UI-related Code
 	
@@ -90,9 +96,19 @@ class MapViewController: UIViewController,  MKMapViewDelegate, UIGestureRecogniz
 		case Mode.Normal:
 			currentMode = Mode.Editing
 			title.replaceCharactersInRange(NSRange(location: 0,length: title.length), withString: "Done")
+			UIView.animateWithDuration(0.5, animations: {
+				self.mapView.frame.origin.y -= self.messageField.frame.height
+				self.messageField.frame.origin.y -= self.messageField.frame.height
+			})
+
 		case Mode.Editing:
 			currentMode = Mode.Normal
 			title.replaceCharactersInRange(NSRange(location: 0,length: title.length), withString: "Edit")
+			UIView.animateWithDuration(0.5, animations: {
+				self.mapView.frame.origin.y += self.messageField.frame.height
+				self.messageField.frame.origin.y += self.messageField.frame.height
+			})
+			
 		}
 		editButton.setAttributedTitle(title as NSAttributedString, forState: UIControlState.Normal)
 	}
