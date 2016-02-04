@@ -12,16 +12,26 @@
 // 5. Write an init method that takes a dictionary and a context.
 
 import CoreData
+import UIKit
 
 class Photo : NSManagedObject {
 	
 	struct Keys {
-		static let ImagePath = "image_path"
-		static let Location = "location"
+		static let ImagePath = "url_m"
+		static let Pin = "pin"
+		static let image = "image"
 	}
 	
 	@NSManaged var imagePath: String
-	@NSManaged var location: Pin
+	@NSManaged var pin: Pin
+	var image: UIImage? {
+		set {
+			self.image = newValue
+		}
+		get {
+			return self.image!
+		}
+	}
 	
 	override init(entity: NSEntityDescription, insertIntoManagedObjectContext context: NSManagedObjectContext?) {
 		super.init(entity: entity, insertIntoManagedObjectContext: context)
@@ -35,8 +45,6 @@ class Photo : NSManagedObject {
 		
 		// Dictionary
 		imagePath = dictionary[Keys.ImagePath] as! String
-		location = dictionary[Keys.Location] as! Pin
-		
+		pin = dictionary[Keys.Pin] as! Pin
 	}
-	
 }

@@ -87,6 +87,8 @@ class MapViewController: UIViewController,  MKMapViewDelegate, UIGestureRecogniz
 		CoreDataStackManager.sharedInstance().saveContext()
 		let annotation = FlickrAnnotation(withPin: newPin)
 		self.mapView.addAnnotation(annotation)
+		// FIXME: Long presses are being recognized twice instead of just once
+		// TODO: add hold to the recognizer process.
 	}
 	
 	@IBAction func enableEditing(sender: AnyObject) {

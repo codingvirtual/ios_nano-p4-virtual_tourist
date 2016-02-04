@@ -1,4 +1,4 @@
-//
+	//
 //  Pin.swift
 //  Virtual Tourist
 //
@@ -28,7 +28,7 @@ class Pin : NSManagedObject {   // 2.
 	
 	// 3. Add @NSManaged in front of each of the properties/attributes
 	@NSManaged var id: NSNumber?
-	@NSManaged var photos: [Photo]?
+	@NSManaged var photos: [Photo]
 	@NSManaged var latitude: NSNumber
 	@NSManaged var longitude: NSNumber
 	

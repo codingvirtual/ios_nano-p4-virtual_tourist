@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		371E18D11C5E97890019A173 /* CollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 371E18D01C5E97890019A173 /* CollectionViewCell.swift */; };
 		3746910F1C591408007EE59B /* FlickrAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3746910E1C591408007EE59B /* FlickrAnnotation.swift */; };
 		376657881C4E489C00041954 /* PhotoAlbumViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 376657871C4E489C00041954 /* PhotoAlbumViewController.swift */; };
 		37ABDF321C4E3FD7002D2CCD /* CoreDataStackManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37ABDF311C4E3FD7002D2CCD /* CoreDataStackManager.swift */; };
@@ -42,6 +43,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		371E18D01C5E97890019A173 /* CollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionViewCell.swift; sourceTree = "<group>"; };
 		3746910E1C591408007EE59B /* FlickrAnnotation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FlickrAnnotation.swift; sourceTree = "<group>"; };
 		376657871C4E489C00041954 /* PhotoAlbumViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotoAlbumViewController.swift; sourceTree = "<group>"; };
 		37ABDF311C4E3FD7002D2CCD /* CoreDataStackManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataStackManager.swift; sourceTree = "<group>"; };
@@ -104,6 +106,7 @@
 			children = (
 				37FDD9051C32FD71000F5C88 /* MapViewController.swift */,
 				376657871C4E489C00041954 /* PhotoAlbumViewController.swift */,
+				371E18D01C5E97890019A173 /* CollectionViewCell.swift */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -326,6 +329,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				371E18D11C5E97890019A173 /* CollectionViewCell.swift in Sources */,
 				3746910F1C591408007EE59B /* FlickrAnnotation.swift in Sources */,
 				37FDD9061C32FD71000F5C88 /* MapViewController.swift in Sources */,
 				376657881C4E489C00041954 /* PhotoAlbumViewController.swift in Sources */,

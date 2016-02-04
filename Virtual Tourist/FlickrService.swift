@@ -10,16 +10,264 @@ import Foundation
 import MapKit
 import CoreData
 
+extension String {
+	func toDouble() -> Double? {
+		return NSNumberFormatter().numberFromString(self)?.doubleValue
+	}
+}
+
 class FlickrService : NSObject {
 	
-	class func getPhotos(forPin: Pin!, context: NSManagedObjectContext) -> [Photo] {
-		var photoAlbum: [Photo] = [Photo]()
-		let photoDictionary: [String : AnyObject] = [
-			Photo.Keys.ImagePath : "path1",
-			Photo.Keys.Location : forPin
+	typealias CompletionHander = (result: AnyObject!, error: NSError?) -> Void
+	
+	var session: NSURLSession
+	
+	static let BASE_URL = "https://api.flickr.com/services/rest/"
+	static let METHOD_NAME = "flickr.photos.search"
+	static let API_KEY = "1cb6b1ec24ea2b3ee72a66be82d894cb"
+	static let EXTRAS = "url_m"
+	static let SAFE_SEARCH = "1"
+	static let DATA_FORMAT = "json"
+	static let NO_JSON_CALLBACK = "1"
+	static let API_SIG = "cc26ad69f06173637e3d936c05f80647"
+	
+	override init() {
+		session = NSURLSession.sharedSession()
+		super.init()
+	}
+	
+	// MARK: - All purpose task method for data
+	
+	func taskForResource(withPin: Pin, usingContext: NSManagedObjectContext, completionHandler: CompletionHander) -> NSURLSessionDataTask {
+		
+		let BASE_URL = "https://api.flickr.com/services/rest/"
+		let METHOD_NAME = "flickr.photos.search"
+		let API_KEY = "1cb6b1ec24ea2b3ee72a66be82d894cb"
+		let EXTRAS = "url_m"
+		let SAFE_SEARCH = "1"
+		let DATA_FORMAT = "json"
+		let NO_JSON_CALLBACK = "1"
+//		let API_SIG = "cc26ad69f06173637e3d936c05f80647"
+		
+		let methodArguments = [
+			"method": METHOD_NAME,
+			"api_key": API_KEY,
+			"safe_search": SAFE_SEARCH,
+			"extras": EXTRAS,
+			"format": DATA_FORMAT,
+			"nojsoncallback": NO_JSON_CALLBACK,
+			"lat": withPin.latitude,
+			"lon": withPin.longitude
 		]
-		let thePhoto = Photo(dictionary: photoDictionary, context: context)
-		photoAlbum.append(thePhoto)
-		return [Photo]()
+		
+		let urlString = BASE_URL + FlickrService.escapedParameters(methodArguments)
+		let url = NSURL(string: urlString)!
+		let request = NSURLRequest(URL: url)
+		
+		print(url)
+		
+		let task = session.dataTaskWithRequest(request) {data, response, downloadError in
+			
+			if let error = downloadError {
+				print("Could not complete the request \(error)")
+				completionHandler(result: nil, error: error)
+			} else {
+				print("Step 3 - taskForResource's completionHandler is invoked.")
+				FlickrService.parseJSONWithCompletionHandler(data!, usingContext: usingContext, withPin: withPin, completionHandler: completionHandler)
+			}
+		}
+	
+		task.resume()
+		
+		return task
+	}
+	
+	// MARK: - Shared Instance
+	
+	class func sharedInstance() -> FlickrService {
+		
+		struct Singleton {
+			static var sharedInstance = FlickrService()
+		}
+		
+		return Singleton.sharedInstance
+	}
+	
+	// Parsing the JSON
+	
+	class func parseJSONWithCompletionHandler(data: NSData, usingContext: NSManagedObjectContext,  withPin: Pin, completionHandler: CompletionHander) {
+		var parsingError: NSError? = nil
+		
+		let parsedResult: AnyObject?
+		do {
+			parsedResult = try NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.AllowFragments)
+		} catch let error as NSError {
+			parsingError = error
+			parsedResult = nil
+		}
+		
+		if let error = parsingError {
+			completionHandler(result: nil, error: error)
+		} else {
+			print("Step 4 - parseJSONWithCompletionHandler is invoked.")
+			if let photosDictionary = parsedResult!.valueForKey("photos") as? [String:AnyObject] {
+				
+				var totalPhotosVal = 0
+				if let totalPhotos = photosDictionary["total"] as? String {
+					totalPhotosVal = (totalPhotos as NSString).integerValue
+				}
+				
+				if totalPhotosVal > 0 {
+					if let photosArray = photosDictionary["photo"] as? [[String: AnyObject]] {
+						
+						let photosCount = 9
+						for index in 0...photosCount {
+							var photoDictionary = photosArray[index] as [String: AnyObject]
+							
+							photoDictionary[Photo.Keys.Pin] = withPin
+							//							let imageURL = NSURL(string: imageUrlString!)
+							//
+							//							if let imageData = NSData(contentsOfURL: imageURL!) {
+							//								print(imageURL!)
+							//								dispatch_async(dispatch_get_main_queue(), {
+							//									// do UI stuff here
+							//
+							//								})
+							//							} else {
+							//								print("Image does not exist at \(imageURL)")
+							//							}
+							let photo = Photo(dictionary: photoDictionary, context: usingContext)
+							usingContext.insertObject(photo)
+							CoreDataStackManager.sharedInstance().saveContext()
+						}
+					} else {
+						print("Cant find key 'photo' in \(photosDictionary)")
+					}
+				} else {
+					
+				}
+			} else {
+				print("Cant find key 'photos' in \(parsedResult)")
+			}
+			completionHandler(result: parsedResult, error: nil)
+		}
+	}
+	
+	func taskForImage(withPhoto: Photo, completionHandler: (imageData: NSData?, error: NSError?) ->  Void) -> NSURLSessionTask {
+		
+		let url = NSURL(string: withPhoto.imagePath)
+		
+		print(url)
+		
+		let request = NSURLRequest(URL: url!)
+		
+		let task = session.dataTaskWithRequest(request) {data, response, downloadError in
+			
+			if let error = downloadError {
+				completionHandler(imageData: nil, error: error)
+			} else {
+				// store the image data to a file here
+				
+				completionHandler(imageData: data, error: nil)
+			}
+		}
+		
+		task.resume()
+		
+		return task
+	}
+	
+	
+	/* Function makes first request to get a random page, then it makes a request to get an image with the random page */
+	class func getImageFromFlickrByLocation(withPin: Pin) {
+		
+		let methodArguments = [
+			"method": METHOD_NAME,
+			"api_key": API_KEY,
+			"safe_search": SAFE_SEARCH,
+			"extras": EXTRAS,
+			"format": DATA_FORMAT,
+			"nojsoncallback": NO_JSON_CALLBACK,
+			"lat": withPin.latitude,
+			"lon": withPin.longitude
+		]
+		
+		let session = NSURLSession.sharedSession()
+		let urlString = BASE_URL + escapedParameters(methodArguments)
+		let url = NSURL(string: urlString)!
+		let request = NSURLRequest(URL: url)
+		
+		let task = session.dataTaskWithRequest(request) {data, response, downloadError in
+			if let error = downloadError {
+				print("Could not complete the request \(error)")
+			} else {
+				
+				let parsedResult = (try! NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions.AllowFragments)) as! NSDictionary
+				
+				if let photosDictionary = parsedResult.valueForKey("photos") as? [String:AnyObject] {
+					
+					var totalPhotosVal = 0
+					if let totalPhotos = photosDictionary["total"] as? String {
+						totalPhotosVal = (totalPhotos as NSString).integerValue
+					}
+					
+					if totalPhotosVal > 0 {
+						if let photosArray = photosDictionary["photo"] as? [[String: AnyObject]] {
+							
+							let photosCount = photosArray.count - 1
+							for index in 0...photosCount {
+								let photoDictionary = photosArray[index] as [String: AnyObject]
+								
+								let imageUrlString = photoDictionary["url_m"] as? String
+								let imageURL = NSURL(string: imageUrlString!)
+								
+								if let imageData = NSData(contentsOfURL: imageURL!) {
+									print(imageURL!)
+									dispatch_async(dispatch_get_main_queue(), {
+										// do UI stuff here
+										
+									})
+								} else {
+									print("Image does not exist at \(imageURL)")
+								}
+							}
+						} else {
+							print("Cant find key 'photo' in \(photosDictionary)")
+						}
+					} else {
+						dispatch_async(dispatch_get_main_queue(), {
+							// do UI stuff here
+						})
+					}
+				} else {
+					print("Cant find key 'photos' in \(parsedResult)")
+				}
+				
+			}
+		}
+		
+		task.resume()
+	}
+	
+	
+	/* Helper function: Given a dictionary of parameters, convert to a string for a url */
+	class func escapedParameters(parameters: [String : AnyObject]) -> String {
+		
+		var urlVars = [String]()
+		
+		for (key, value) in parameters {
+			
+			/* Make sure that it is a string value */
+			let stringValue = "\(value)"
+			
+			/* Escape it */
+			let escapedValue = stringValue.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLQueryAllowedCharacterSet())
+			
+			/* Append it */
+			urlVars += [key + "=" + "\(escapedValue!)"]
+			
+		}
+		
+		return (!urlVars.isEmpty ? "?" : "") + urlVars.joinWithSeparator("&")
 	}
 }
