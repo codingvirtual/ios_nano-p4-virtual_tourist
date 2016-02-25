@@ -28,7 +28,7 @@ class Photo : NSManagedObject {
 	}
 	
 	@NSManaged var imagePath: String
-	@NSManaged var pin: Pin
+	@NSManaged var pin: Pin?
 	@NSManaged var id: NSNumber?
 	@NSManaged var filePath: String?
 	
@@ -36,6 +36,36 @@ class Photo : NSManagedObject {
 	
 	override init(entity: NSEntityDescription, insertIntoManagedObjectContext context: NSManagedObjectContext?) {
 		super.init(entity: entity, insertIntoManagedObjectContext: context)
+		if filePath == nil {
+			let session = NSURLSession.sharedSession()
+			let url = NSURL(string: self.imagePath)
+			let task = session.downloadTaskWithURL(url!, completionHandler: { data, response, downloadError in
+				if let error = downloadError {
+					print(error)
+				} else {
+					let tempFile = data! as NSURL
+					print(tempFile.path)
+					let fileManager = NSFileManager.defaultManager()
+					let documentsDirectoryURL: NSURL = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask).first!
+					let imageFile = documentsDirectoryURL.URLByAppendingPathComponent((self.id?.stringValue)!)
+					do {
+						try fileManager.moveItemAtURL(tempFile, toURL: imageFile)
+						self.filePath = imageFile.path
+						self.image = UIImage(contentsOfFile: self.filePath!)
+						try context!.save()
+					} catch _ {
+						print("error moving file")
+					}
+				}
+				
+			})
+			task.resume()
+		} else {
+			let documentsDirectoryURL: NSURL = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask).first!
+			let imageFile = documentsDirectoryURL.URLByAppendingPathComponent((self.id?.stringValue)!)
+			self.filePath = imageFile.path
+			self.image = UIImage(contentsOfFile: self.filePath!)
+		}
 	}
 	
 	convenience init(dictionary: [String : AnyObject], context: NSManagedObjectContext) {
@@ -46,32 +76,47 @@ class Photo : NSManagedObject {
 		
 		// Dictionary
 		imagePath = dictionary[Keys.ImagePath] as! String
-		pin = dictionary[Keys.Pin] as! Pin
+		pin = dictionary[Keys.Pin] as? Pin
 		id = Photo.nextId++
 		filePath = dictionary[Keys.FilePath] as? String
-		let session = NSURLSession.sharedSession()
-		let url = NSURL(string: self.imagePath)
-		let task = session.downloadTaskWithURL(url!, completionHandler: { data, response, downloadError in
-			if let error = downloadError {
-				print(error)
-			} else {
-				let tempFile = data! as NSURL
-				print(tempFile.path)
-				let fileManager = NSFileManager.defaultManager()
-				let documentsDirectoryURL: NSURL = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask).first!
-				let imageFile = documentsDirectoryURL.URLByAppendingPathComponent((self.id?.stringValue)!)
-				do {
-					try fileManager.moveItemAtURL(tempFile, toURL: imageFile)
-					self.filePath = imageFile.path
-					self.image = UIImage(contentsOfFile: self.filePath!)
-					try context.save()
-				} catch _ {
-					print("error moving file")
+		if filePath == nil {
+			let session = NSURLSession.sharedSession()
+			let url = NSURL(string: self.imagePath)
+			let task = session.downloadTaskWithURL(url!, completionHandler: { data, response, downloadError in
+				if let error = downloadError {
+					print(error)
+				} else {
+					let tempFile = data! as NSURL
+					print(tempFile.path)
+					let fileManager = NSFileManager.defaultManager()
+					let documentsDirectoryURL: NSURL = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask).first!
+					let imageFile = documentsDirectoryURL.URLByAppendingPathComponent((self.id?.stringValue)!)
+					do {
+						try fileManager.moveItemAtURL(tempFile, toURL: imageFile)
+						self.filePath = imageFile.path
+						self.image = UIImage(contentsOfFile: self.filePath!)
+						try context.save()
+					} catch _ {
+						print("error moving file")
+					}
 				}
-			}
-			
-		})
-		task.resume()
+				
+			})
+			task.resume()
+		} else {
+			self.image = UIImage(contentsOfFile: self.filePath!)
+		}
 		
 	}
+	
+//	deinit {
+//		let fileManager = NSFileManager.defaultManager()
+//		let documentsDirectoryURL: NSURL = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask).first!
+//		let imageFile = documentsDirectoryURL.URLByAppendingPathComponent((self.id?.stringValue)!)
+//		do {
+//			try fileManager.removeItemAtURL(imageFile)
+//		} catch _ {
+//			// add error handling
+//		}
+//	}
 }

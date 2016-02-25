@@ -164,9 +164,30 @@ class MapViewController: UIViewController,  MKMapViewDelegate, UIGestureRecogniz
 			let controller = self.storyboard!.instantiateViewControllerWithIdentifier("PhotoAlbumViewController") as! PhotoAlbumViewController
 			controller.pin = annotation?.pin
 			self.showViewController(controller, sender: self)
-//			self.presentViewController(controller, animated: true, completion: nil)
 		case Mode.Editing:
 			print("delete this")
+			// loop through photos
+			let annotation = view.annotation as? FlickrAnnotation
+			
+			for index in 0...(annotation!.pin.photos.count) {
+				let photo = annotation!.pin.photos.removeAtIndex(index) as Photo
+				photo.pin = nil
+//				sharedContext.deleteObject(photo)
+			}
+			
+			// delete the photos
+			annotation!.pin.photos.removeAll()
+
+			// delete pin
+//			sharedContext.deleteObject((annotation?.pin)!)
+			
+			// save context
+			do {
+				try sharedContext.save()
+			} catch _ {}
+			
+			// delete annotation
+			mapView.removeAnnotation(view.annotation!)
 		}
 	}
 }

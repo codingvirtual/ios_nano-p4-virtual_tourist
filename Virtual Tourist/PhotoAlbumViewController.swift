@@ -24,28 +24,33 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDataSource, UI
 	var updatedIndexPaths: [NSIndexPath]!
 	
 	@IBOutlet weak var collectionView: UICollectionView!
-			
+	
 	var sharedContext = CoreDataStackManager.sharedInstance().managedObjectContext
 	let imageCache = (UIApplication.sharedApplication().delegate as! AppDelegate).imageCache
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		
-		// Start the fetched results controller
-		do {
-			try fetchedResultsController.performFetch()
-		} catch {}
-		
 	}
 	
 	
 	override func viewWillAppear(animated: Bool) {
 		super.viewWillAppear(animated)
-		if pin.photos!.isEmpty {
+		
+		// Start the fetched results controller
+		do {
+			try fetchedResultsController.performFetch()
+		} catch _ {
+			print ("core data error")
+		}
+		
+		if fetchedResultsController.fetchedObjects?.count == 0 {
 			FlickrService.sharedInstance().taskForResource(self.pin, usingContext: self.sharedContext) {result, error in
-					print(result)
+				print(result)
 				// now set up a task to go download all the images
 			}
+		} else {
+			print("pin has stored photos")
 		}
 	}
 	// Layout the collection view
@@ -70,25 +75,26 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDataSource, UI
 	
 	func configureCell(cell: PhotosCollectionViewCell, atIndexPath indexPath: NSIndexPath) {
 		
-//		var task: NSURLSessionTask = NSURLSessionTask()
-//		let withPhoto = fetchedResultsController.objectAtIndexPath(indexPath) as! Photo
-//		if let image = imageCache.imageWithIdentifier(withPhoto.id?.stringValue) {
-//			withPhoto.image = image
-//			dispatch_async(dispatch_get_main_queue()) {
-//				cell.imageView!.image = withPhoto.image
-//			}
-//		} else {
-//			task = FlickrService.sharedInstance().taskForImage(withPhoto, completionHandler: nil)
-//			dispatch_async(dispatch_get_main_queue()) {
-//				cell.imageView!.image = withPhoto.image
-//			}
-//		}
-
-//		cell.taskToCancelifCellIsReused = task
-		let withPhoto = fetchedResultsController.objectAtIndexPath(indexPath) as! Photo
-		if withPhoto.filePath != nil {
-			cell.imageView!.image = UIImage(contentsOfFile: withPhoto.filePath!)
+		//		var task: NSURLSessionTask = NSURLSessionTask()
+		//		let withPhoto = fetchedResultsController.objectAtIndexPath(indexPath) as! Photo
+		//		if let image = imageCache.imageWithIdentifier(withPhoto.id?.stringValue) {
+		//			withPhoto.image = image
+		//			dispatch_async(dispatch_get_main_queue()) {
+		//				cell.imageView!.image = withPhoto.image
+		//			}
+		//		} else {
+		//			task = FlickrService.sharedInstance().taskForImage(withPhoto, completionHandler: nil)
+		//			dispatch_async(dispatch_get_main_queue()) {
+		//				cell.imageView!.image = withPhoto.image
+		//			}
+		//		}
+		
+		//		cell.taskToCancelifCellIsReused = task
+		let photo = fetchedResultsController.objectAtIndexPath(indexPath) as! Photo
+		dispatch_async(dispatch_get_main_queue()) {
+			cell.imageView!.image = photo.image
 		}
+		
 	}
 	
 	
@@ -99,9 +105,7 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDataSource, UI
 	}
 	
 	func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-		let sectionInfo = self.fetchedResultsController.sections![section] 
-		
-		print("number Of Cells: \(sectionInfo.numberOfObjects)")
+		let sectionInfo = self.fetchedResultsController.sections![section]
 		return sectionInfo.numberOfObjects
 	}
 	
@@ -116,17 +120,17 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDataSource, UI
 	
 	func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
 		
-		let cell = collectionView.cellForItemAtIndexPath(indexPath) as! PhotosCollectionViewCell
-		
-		// Whenever a cell is tapped we will toggle its presence in the selectedIndexes array
-		if let index = selectedIndexes.indexOf(indexPath) {
-			selectedIndexes.removeAtIndex(index)
-		} else {
-			selectedIndexes.append(indexPath)
-		}
-		
-		// Then reconfigure the cell
-		configureCell(cell, atIndexPath: indexPath)
+//		let cell = collectionView.cellForItemAtIndexPath(indexPath) as! PhotosCollectionViewCell
+//		
+//		// Whenever a cell is tapped we will toggle its presence in the selectedIndexes array
+//		if let index = selectedIndexes.indexOf(indexPath) {
+//			selectedIndexes.removeAtIndex(index)
+//		} else {
+//			selectedIndexes.append(indexPath)
+//		}
+//		
+//		// Then reconfigure the cell
+//		configureCell(cell, atIndexPath: indexPath)
 		
 	}
 	
