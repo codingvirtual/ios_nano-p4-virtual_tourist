@@ -10,7 +10,7 @@ import UIKit
 import CoreData
 import MapKit
 
-class MapViewController: UIViewController,  MKMapViewDelegate, UIGestureRecognizerDelegate, NSFetchedResultsControllerDelegate {
+class MapViewController: UIViewController,  MKMapViewDelegate, NSFetchedResultsControllerDelegate {
 	
 	// MARK: - Variables and Outlets
 	
@@ -36,6 +36,8 @@ class MapViewController: UIViewController,  MKMapViewDelegate, UIGestureRecogniz
 	
 	@IBOutlet weak var mapView: MKMapView!
 	
+	@IBOutlet var longPressRecognizer: UILongPressGestureRecognizer!
+	
 	@IBOutlet weak var editButton: UIButton!
 	
 	@IBOutlet weak var messageField: UITextField!
@@ -49,7 +51,7 @@ class MapViewController: UIViewController,  MKMapViewDelegate, UIGestureRecogniz
 	override func viewDidLoad() {
 		super.viewDidLoad()
 	}
-	
+
 	override func viewWillAppear(animated: Bool) {
 		super.viewWillAppear(animated)
 		
@@ -63,7 +65,7 @@ class MapViewController: UIViewController,  MKMapViewDelegate, UIGestureRecogniz
 		
 		// Change 2. Set this view controller as the fetched results controller's delegate
 		fetchedResultsController.delegate = self
-		
+		print(fetchedResultsController.fetchedObjects!.count)
 		for aPin in fetchedResultsController.fetchedObjects as! [Pin] {
 			self.createPin(aPin)
 		}
@@ -71,11 +73,15 @@ class MapViewController: UIViewController,  MKMapViewDelegate, UIGestureRecogniz
 	}
 	// MARK: - UI-related Code
 	
-	@IBAction func longPress(sender: AnyObject) {
+	@IBAction func handleGesture() {
 		print("long press detected")
-		let recognizer: UILongPressGestureRecognizer = sender as! UILongPressGestureRecognizer
-		if recognizer.state == UIGestureRecognizerState.Ended {
-			let point: CGPoint = recognizer.locationInView(self.mapView)
+		if longPressRecognizer.state == UIGestureRecognizerState.Began {
+			print("gesture began")
+		}
+		if longPressRecognizer.state == UIGestureRecognizerState.Ended {
+			print("now adding annotation")
+
+			let point: CGPoint = longPressRecognizer.locationInView(self.mapView)
 			let locCoords: CLLocationCoordinate2D = self.mapView.convertPoint(point, toCoordinateFromView: mapView)
 			let newPin = Pin(dictionary: [
 				Pin.Keys.Longitude : locCoords.longitude,
@@ -83,8 +89,7 @@ class MapViewController: UIViewController,  MKMapViewDelegate, UIGestureRecogniz
 				], context: self.sharedContext)
 			sharedContext.insertObject(newPin)
 			CoreDataStackManager.sharedInstance().saveContext()
-			let annotation = FlickrAnnotation(withPin: newPin)
-			self.mapView.addAnnotation(annotation)
+
 			// TODO: add hold to the recognizer process.
 		}
 	}
@@ -168,26 +173,17 @@ class MapViewController: UIViewController,  MKMapViewDelegate, UIGestureRecogniz
 			print("delete this")
 			// loop through photos
 			let annotation = view.annotation as? FlickrAnnotation
-			
-			for index in 0...(annotation!.pin.photos.count) {
-				let photo = annotation!.pin.photos.removeAtIndex(index) as Photo
-				photo.pin = nil
-//				sharedContext.deleteObject(photo)
-			}
-			
-			// delete the photos
-			annotation!.pin.photos.removeAll()
+			sharedContext.deleteObject((annotation?.pin)!)
 
-			// delete pin
-//			sharedContext.deleteObject((annotation?.pin)!)
-			
 			// save context
 			do {
-				try sharedContext.save()
-			} catch _ {}
+				try self.sharedContext.save()
+			} catch _ {
+				print("error saving context")
+			}
 			
 			// delete annotation
-			mapView.removeAnnotation(view.annotation!)
+			self.mapView.removeAnnotation(annotation!)
 		}
 	}
 }

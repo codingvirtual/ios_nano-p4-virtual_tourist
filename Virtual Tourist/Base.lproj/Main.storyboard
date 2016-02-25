@@ -23,7 +23,6 @@
                                 <gestureRecognizers/>
                                 <connections>
                                     <outlet property="delegate" destination="BYZ-38-t0r" id="E7S-WE-PEi"/>
-                                    <outletCollection property="gestureRecognizers" destination="yWL-uc-etO" appends="YES" id="hAD-mN-dV8"/>
                                 </connections>
                             </mapView>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="Here I am" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="xTl-eM-fgj">
@@ -38,6 +37,7 @@
                             </textField>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <gestureRecognizers/>
                         <constraints>
                             <constraint firstItem="Spa-7V-WtI" firstAttribute="bottom" secondItem="wfy-db-euE" secondAttribute="top" id="0Oo-Sg-PUW"/>
                             <constraint firstItem="xTl-eM-fgj" firstAttribute="top" secondItem="wfy-db-euE" secondAttribute="top" id="1Ku-cw-StY"/>
@@ -47,6 +47,9 @@
                             <constraint firstItem="xTl-eM-fgj" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="-20" id="nfn-L6-kEL"/>
                             <constraint firstItem="Spa-7V-WtI" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="-20" id="wmM-R1-FHg"/>
                         </constraints>
+                        <connections>
+                            <outletCollection property="gestureRecognizers" destination="g2j-Ut-zdS" appends="YES" id="He2-7V-u0f"/>
+                        </connections>
                     </view>
                     <navigationItem key="navigationItem" title="Virtual Tourist" id="uXk-95-Qh2">
                         <barButtonItem key="rightBarButtonItem" id="zCo-op-Tde">
@@ -70,14 +73,15 @@
                     </navigationItem>
                     <connections>
                         <outlet property="editButton" destination="qer-hg-og1" id="gLH-nG-oMA"/>
+                        <outlet property="longPressRecognizer" destination="g2j-Ut-zdS" id="WOi-MP-SgZ"/>
                         <outlet property="mapView" destination="Spa-7V-WtI" id="5gY-eO-WKT"/>
                         <outlet property="messageField" destination="xTl-eM-fgj" id="3E8-Yt-Vpx"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
-                <pongPressGestureRecognizer allowableMovement="10" minimumPressDuration="0.5" id="yWL-uc-etO">
+                <pongPressGestureRecognizer delaysTouchesEnded="NO" allowableMovement="10" minimumPressDuration="0.5" id="g2j-Ut-zdS">
                     <connections>
-                        <action selector="longPress:" destination="BYZ-38-t0r" id="kUs-Ja-5f5"/>
+                        <action selector="handleGesture" destination="BYZ-38-t0r" id="JoE-bk-DSM"/>
                     </connections>
                 </pongPressGestureRecognizer>
             </objects>
