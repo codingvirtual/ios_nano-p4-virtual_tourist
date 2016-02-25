@@ -25,26 +25,26 @@
                                     <outlet property="delegate" destination="BYZ-38-t0r" id="E7S-WE-PEi"/>
                                 </connections>
                             </mapView>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="Here I am" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="xTl-eM-fgj">
-                                <rect key="frame" x="0.0" y="600" width="600" height="30"/>
-                                <color key="backgroundColor" red="1" green="0.4122511043" blue="0.060857454999999998" alpha="1" colorSpace="calibratedRGB"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Tap Pins To Delete" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RlU-xQ-gey" userLabel="Message Field">
+                                <rect key="frame" x="0.0" y="600" width="600" height="75"/>
+                                <color key="backgroundColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="30" id="3Ua-3i-1hX"/>
+                                    <constraint firstAttribute="height" constant="75" id="z4U-em-jl2"/>
                                 </constraints>
-                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits"/>
-                            </textField>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <gestureRecognizers/>
                         <constraints>
                             <constraint firstItem="Spa-7V-WtI" firstAttribute="bottom" secondItem="wfy-db-euE" secondAttribute="top" id="0Oo-Sg-PUW"/>
-                            <constraint firstItem="xTl-eM-fgj" firstAttribute="top" secondItem="wfy-db-euE" secondAttribute="top" id="1Ku-cw-StY"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="Spa-7V-WtI" secondAttribute="trailing" constant="-20" id="A43-p5-Cgk"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="xTl-eM-fgj" secondAttribute="trailing" constant="-20" id="PBm-Ec-hUh"/>
+                            <constraint firstItem="RlU-xQ-gey" firstAttribute="trailing" secondItem="Spa-7V-WtI" secondAttribute="trailing" id="9OF-Bq-eHN"/>
+                            <constraint firstItem="Spa-7V-WtI" firstAttribute="trailing" secondItem="8bC-Xf-vdC" secondAttribute="trailingMargin" constant="20" id="A43-p5-Cgk"/>
+                            <constraint firstItem="RlU-xQ-gey" firstAttribute="top" secondItem="wfy-db-euE" secondAttribute="top" id="ELI-VN-Oqg"/>
+                            <constraint firstItem="RlU-xQ-gey" firstAttribute="leading" secondItem="Spa-7V-WtI" secondAttribute="leading" id="Izj-8L-GfK"/>
                             <constraint firstItem="Spa-7V-WtI" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" id="Unm-xt-HLp"/>
-                            <constraint firstItem="xTl-eM-fgj" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="-20" id="nfn-L6-kEL"/>
                             <constraint firstItem="Spa-7V-WtI" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="-20" id="wmM-R1-FHg"/>
                         </constraints>
                         <connections>
@@ -75,7 +75,7 @@
                         <outlet property="editButton" destination="qer-hg-og1" id="gLH-nG-oMA"/>
                         <outlet property="longPressRecognizer" destination="g2j-Ut-zdS" id="WOi-MP-SgZ"/>
                         <outlet property="mapView" destination="Spa-7V-WtI" id="5gY-eO-WKT"/>
-                        <outlet property="messageField" destination="xTl-eM-fgj" id="3E8-Yt-Vpx"/>
+                        <outlet property="messageField" destination="RlU-xQ-gey" id="wsy-N4-1gs"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>

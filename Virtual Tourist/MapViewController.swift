@@ -40,7 +40,7 @@ class MapViewController: UIViewController,  MKMapViewDelegate, NSFetchedResultsC
 	
 	@IBOutlet weak var editButton: UIButton!
 	
-	@IBOutlet weak var messageField: UITextField!
+	@IBOutlet weak var messageField: UILabel!
 	
 	var sharedContext: NSManagedObjectContext {
 		return CoreDataStackManager.sharedInstance().managedObjectContext
@@ -173,15 +173,7 @@ class MapViewController: UIViewController,  MKMapViewDelegate, NSFetchedResultsC
 			print("delete this")
 			// loop through photos
 			let annotation = view.annotation as? FlickrAnnotation
-			sharedContext.deleteObject((annotation?.pin)!)
-
-			// save context
-			do {
-				try self.sharedContext.save()
-			} catch _ {
-				print("error saving context")
-			}
-			
+			deletePin((annotation?.pin)!)
 			// delete annotation
 			self.mapView.removeAnnotation(annotation!)
 		}
