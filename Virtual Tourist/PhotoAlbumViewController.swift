@@ -24,13 +24,9 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDataSource, UI
 	var updatedIndexPaths: [NSIndexPath]!
 	
 	@IBOutlet weak var collectionView: UICollectionView!
-	@IBOutlet weak var imageView: UIImageView!
-	
-	@IBOutlet weak var bottomButton: UIBarButtonItem!
-	
-	var cancelButton: UIBarButtonItem!
-	
+			
 	var sharedContext = CoreDataStackManager.sharedInstance().managedObjectContext
+	let imageCache = (UIApplication.sharedApplication().delegate as! AppDelegate).imageCache
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -45,7 +41,7 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDataSource, UI
 	
 	override func viewWillAppear(animated: Bool) {
 		super.viewWillAppear(animated)
-		if pin.photos.isEmpty {
+		if pin.photos!.isEmpty {
 			FlickrService.sharedInstance().taskForResource(self.pin, usingContext: self.sharedContext) {result, error in
 					print(result)
 				// now set up a task to go download all the images
@@ -72,19 +68,27 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDataSource, UI
 	
 	// MARK: - Configure Cell
 	
-	func configureCell(cell: CollectionViewCell, atIndexPath indexPath: NSIndexPath) {
+	func configureCell(cell: PhotosCollectionViewCell, atIndexPath indexPath: NSIndexPath) {
 		
+//		var task: NSURLSessionTask = NSURLSessionTask()
+//		let withPhoto = fetchedResultsController.objectAtIndexPath(indexPath) as! Photo
+//		if let image = imageCache.imageWithIdentifier(withPhoto.id?.stringValue) {
+//			withPhoto.image = image
+//			dispatch_async(dispatch_get_main_queue()) {
+//				cell.imageView!.image = withPhoto.image
+//			}
+//		} else {
+//			task = FlickrService.sharedInstance().taskForImage(withPhoto, completionHandler: nil)
+//			dispatch_async(dispatch_get_main_queue()) {
+//				cell.imageView!.image = withPhoto.image
+//			}
+//		}
+
+//		cell.taskToCancelifCellIsReused = task
 		let withPhoto = fetchedResultsController.objectAtIndexPath(indexPath) as! Photo
-		let task = FlickrService.sharedInstance().taskForImage(withPhoto) { (imageData, error) -> Void in
-			if let data = imageData {
-				let image = UIImage(data: data)
-				withPhoto.image = image
-				dispatch_async(dispatch_get_main_queue()) {
-					cell.imageView!.image = image
-				}
-			}
+		if withPhoto.filePath != nil {
+			cell.imageView!.image = UIImage(contentsOfFile: withPhoto.filePath!)
 		}
-		cell.taskToCancelifCellIsReused = task
 	}
 	
 	
@@ -103,7 +107,7 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDataSource, UI
 	
 	func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
 		
-		let cell = collectionView.dequeueReusableCellWithReuseIdentifier("CollectionViewCell", forIndexPath: indexPath) as! CollectionViewCell
+		let cell = collectionView.dequeueReusableCellWithReuseIdentifier("PhotosCollectionViewCell", forIndexPath: indexPath) as! PhotosCollectionViewCell
 		
 		self.configureCell(cell, atIndexPath: indexPath)
 		
@@ -112,7 +116,7 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDataSource, UI
 	
 	func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
 		
-		let cell = collectionView.cellForItemAtIndexPath(indexPath) as! CollectionViewCell
+		let cell = collectionView.cellForItemAtIndexPath(indexPath) as! PhotosCollectionViewCell
 		
 		// Whenever a cell is tapped we will toggle its presence in the selectedIndexes array
 		if let index = selectedIndexes.indexOf(indexPath) {
@@ -186,6 +190,7 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDataSource, UI
 		case .Move:
 			print("Move an item. We don't expect to see this in this app.")
 		}
+		
 	}
 	
 	// This method is invoked after all of the changed in the current batch have been collected

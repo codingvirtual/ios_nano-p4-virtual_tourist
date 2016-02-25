@@ -28,7 +28,7 @@ class Pin : NSManagedObject {   // 2.
 	
 	// 3. Add @NSManaged in front of each of the properties/attributes
 	@NSManaged var id: NSNumber?
-	@NSManaged var photos: [Photo]
+	@NSManaged var photos: [Photo]?
 	@NSManaged var latitude: NSNumber
 	@NSManaged var longitude: NSNumber
 	
@@ -38,15 +38,14 @@ class Pin : NSManagedObject {   // 2.
 	}
 	
 	// 5. Write an init method that takes a dictionary and a context.
-	init(dictionary: [String : AnyObject], context: NSManagedObjectContext) {
+	convenience init(dictionary: [String : AnyObject], context: NSManagedObjectContext) {
 		
 		// Core Data
 		let entity =  NSEntityDescription.entityForName("Pin", inManagedObjectContext: context)!
-		super.init(entity: entity, insertIntoManagedObjectContext: context)
+		self.init(entity: entity, insertIntoManagedObjectContext: context)
 		
 		// Dictionary
 //		id = dictionary[Keys.ID] as! NSNumber
-//		photos = dictionary[Keys.Photos] as! [Photo]
 		latitude = dictionary[Keys.Latitude] as! NSNumber
 		longitude = dictionary[Keys.Longitude] as! NSNumber
 	}

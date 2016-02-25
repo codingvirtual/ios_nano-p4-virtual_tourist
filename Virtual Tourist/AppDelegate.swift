@@ -14,7 +14,7 @@ import MapKit
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
 	var window: UIWindow?
-
+	var imageCache: ImageCache = ImageCache()
 
 	func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
 		// Override point for customization after application launch.
@@ -40,13 +40,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 			
 			dictionary = [Pin.Keys.ID : pinCount++, Pin.Keys.Latitude : Double(36.116), Pin.Keys.Longitude: Double(-115.100)]
 			pin = Pin(dictionary: dictionary, context: context)
-			
-			dictionary = [Pin.Keys.ID : pinCount++, Pin.Keys.Latitude : Double(36.116), Pin.Keys.Longitude: Double(-115.125)]
-			pin = Pin(dictionary: dictionary, context: context)
-			
-			dictionary = [Pin.Keys.ID : pinCount++, Pin.Keys.Latitude : Double(36.116), Pin.Keys.Longitude: Double(-115.150)]
-			pin = Pin(dictionary: dictionary, context: context)
-			
 			CoreDataStackManager.sharedInstance().saveContext()
 		}
 	}

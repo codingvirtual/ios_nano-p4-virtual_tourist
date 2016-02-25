@@ -16,35 +16,62 @@ import UIKit
 
 class Photo : NSManagedObject {
 	
+	// set the "nextId" value to the current time in millis. Guarantees no overlap in prior values loaded by CoreData 
+	static var nextId = Int(NSDate().timeIntervalSince1970)
+	
 	struct Keys {
 		static let ImagePath = "url_m"
+		static let FilePath = "filePath"
 		static let Pin = "pin"
-		static let image = "image"
+		static let Image = "image"
+		static let Id = "id"
 	}
 	
 	@NSManaged var imagePath: String
 	@NSManaged var pin: Pin
-	var image: UIImage? {
-		set {
-			self.image = newValue
-		}
-		get {
-			return self.image!
-		}
-	}
+	@NSManaged var id: NSNumber?
+	@NSManaged var filePath: String?
+	
+	var image: UIImage?
 	
 	override init(entity: NSEntityDescription, insertIntoManagedObjectContext context: NSManagedObjectContext?) {
 		super.init(entity: entity, insertIntoManagedObjectContext: context)
 	}
 	
-	init(dictionary: [String : AnyObject], context: NSManagedObjectContext) {
+	convenience init(dictionary: [String : AnyObject], context: NSManagedObjectContext) {
 		
 		// Core Data
 		let entity =  NSEntityDescription.entityForName("Photo", inManagedObjectContext: context)!
-		super.init(entity: entity, insertIntoManagedObjectContext: context)
+		self.init(entity: entity, insertIntoManagedObjectContext: context)
 		
 		// Dictionary
 		imagePath = dictionary[Keys.ImagePath] as! String
 		pin = dictionary[Keys.Pin] as! Pin
+		id = Photo.nextId++
+		filePath = dictionary[Keys.FilePath] as? String
+		let session = NSURLSession.sharedSession()
+		let url = NSURL(string: self.imagePath)
+		let task = session.downloadTaskWithURL(url!, completionHandler: { data, response, downloadError in
+			if let error = downloadError {
+				print(error)
+			} else {
+				let tempFile = data! as NSURL
+				print(tempFile.path)
+				let fileManager = NSFileManager.defaultManager()
+				let documentsDirectoryURL: NSURL = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask).first!
+				let imageFile = documentsDirectoryURL.URLByAppendingPathComponent((self.id?.stringValue)!)
+				do {
+					try fileManager.moveItemAtURL(tempFile, toURL: imageFile)
+					self.filePath = imageFile.path
+					self.image = UIImage(contentsOfFile: self.filePath!)
+					try context.save()
+				} catch _ {
+					print("error moving file")
+				}
+			}
+			
+		})
+		task.resume()
+		
 	}
 }

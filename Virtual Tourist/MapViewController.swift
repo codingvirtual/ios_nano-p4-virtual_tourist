@@ -48,6 +48,13 @@ class MapViewController: UIViewController,  MKMapViewDelegate, UIGestureRecogniz
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
+
+		
+
+	}
+	
+	override func viewWillAppear(animated: Bool) {
+		super.viewWillAppear(animated)
 		
 		// set up any additional UI here
 		do {
@@ -64,13 +71,6 @@ class MapViewController: UIViewController,  MKMapViewDelegate, UIGestureRecogniz
 			createPin(aPin)
 		}
 		
-		
-
-	}
-	
-	override func viewWillAppear(animated: Bool) {
-		super.viewWillAppear(animated)
-
 	}
 	// MARK: - UI-related Code
 	
@@ -165,7 +165,8 @@ class MapViewController: UIViewController,  MKMapViewDelegate, UIGestureRecogniz
 			print(self.fetchedResultsController.indexPathForObject((annotation?.pin)!))
 			let controller = self.storyboard!.instantiateViewControllerWithIdentifier("PhotoAlbumViewController") as! PhotoAlbumViewController
 			controller.pin = annotation?.pin
-			self.presentViewController(controller, animated: true, completion: nil)
+			self.showViewController(controller, sender: self)
+//			self.presentViewController(controller, animated: true, completion: nil)
 		case Mode.Editing:
 			print("delete this")
 		}

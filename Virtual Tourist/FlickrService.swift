@@ -117,6 +117,9 @@ class FlickrService : NSObject {
 					totalPhotosVal = (totalPhotos as NSString).integerValue
 				}
 				
+				if totalPhotosVal > 9 {
+					totalPhotosVal = 9
+				}
 				if totalPhotosVal > 0 {
 					if let photosArray = photosDictionary["photo"] as? [[String: AnyObject]] {
 						
@@ -137,7 +140,8 @@ class FlickrService : NSObject {
 							//								print("Image does not exist at \(imageURL)")
 							//							}
 							let photo = Photo(dictionary: photoDictionary, context: usingContext)
-							usingContext.insertObject(photo)
+							photo.pin = withPin
+//							withPin.photos.append(photo)
 							CoreDataStackManager.sharedInstance().saveContext()
 						}
 					} else {
@@ -153,7 +157,7 @@ class FlickrService : NSObject {
 		}
 	}
 	
-	func taskForImage(withPhoto: Photo, completionHandler: (imageData: NSData?, error: NSError?) ->  Void) -> NSURLSessionTask {
+	func taskForImage(withPhoto: Photo, completionHandler: ((imageData: NSData?, error: NSError?) ->  Void)?) -> NSURLSessionTask {
 		
 		let url = NSURL(string: withPhoto.imagePath)
 		
@@ -164,89 +168,22 @@ class FlickrService : NSObject {
 		let task = session.dataTaskWithRequest(request) {data, response, downloadError in
 			
 			if let error = downloadError {
-				completionHandler(imageData: nil, error: error)
+				print(error)
+				if completionHandler != nil {
+					completionHandler!(imageData: nil, error: error)
+				}
 			} else {
 				// store the image data to a file here
-				
-				completionHandler(imageData: data, error: nil)
+				withPhoto.image = UIImage(data: data!)
+				if completionHandler != nil {
+					completionHandler!(imageData: data, error: nil)
+				}
 			}
 		}
 		
 		task.resume()
 		
 		return task
-	}
-	
-	
-	/* Function makes first request to get a random page, then it makes a request to get an image with the random page */
-	class func getImageFromFlickrByLocation(withPin: Pin) {
-		
-		let methodArguments = [
-			"method": METHOD_NAME,
-			"api_key": API_KEY,
-			"safe_search": SAFE_SEARCH,
-			"extras": EXTRAS,
-			"format": DATA_FORMAT,
-			"nojsoncallback": NO_JSON_CALLBACK,
-			"lat": withPin.latitude,
-			"lon": withPin.longitude
-		]
-		
-		let session = NSURLSession.sharedSession()
-		let urlString = BASE_URL + escapedParameters(methodArguments)
-		let url = NSURL(string: urlString)!
-		let request = NSURLRequest(URL: url)
-		
-		let task = session.dataTaskWithRequest(request) {data, response, downloadError in
-			if let error = downloadError {
-				print("Could not complete the request \(error)")
-			} else {
-				
-				let parsedResult = (try! NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions.AllowFragments)) as! NSDictionary
-				
-				if let photosDictionary = parsedResult.valueForKey("photos") as? [String:AnyObject] {
-					
-					var totalPhotosVal = 0
-					if let totalPhotos = photosDictionary["total"] as? String {
-						totalPhotosVal = (totalPhotos as NSString).integerValue
-					}
-					
-					if totalPhotosVal > 0 {
-						if let photosArray = photosDictionary["photo"] as? [[String: AnyObject]] {
-							
-							let photosCount = photosArray.count - 1
-							for index in 0...photosCount {
-								let photoDictionary = photosArray[index] as [String: AnyObject]
-								
-								let imageUrlString = photoDictionary["url_m"] as? String
-								let imageURL = NSURL(string: imageUrlString!)
-								
-								if let imageData = NSData(contentsOfURL: imageURL!) {
-									print(imageURL!)
-									dispatch_async(dispatch_get_main_queue(), {
-										// do UI stuff here
-										
-									})
-								} else {
-									print("Image does not exist at \(imageURL)")
-								}
-							}
-						} else {
-							print("Cant find key 'photo' in \(photosDictionary)")
-						}
-					} else {
-						dispatch_async(dispatch_get_main_queue(), {
-							// do UI stuff here
-						})
-					}
-				} else {
-					print("Cant find key 'photos' in \(parsedResult)")
-				}
-				
-			}
-		}
-		
-		task.resume()
 	}
 	
 	

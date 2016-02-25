@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9532" systemVersion="15E33e" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="js9-El-X3e">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9532" systemVersion="15D21" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="js9-El-X3e">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9530"/>
@@ -72,7 +72,6 @@
                         <outlet property="editButton" destination="qer-hg-og1" id="gLH-nG-oMA"/>
                         <outlet property="mapView" destination="Spa-7V-WtI" id="5gY-eO-WKT"/>
                         <outlet property="messageField" destination="xTl-eM-fgj" id="3E8-Yt-Vpx"/>
-                        <segue destination="Ffu-7v-k6v" kind="showDetail" identifier="AlbumViewSegue" id="sI2-h0-0Ul"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
@@ -87,7 +86,7 @@
         <!--PhotoAlbumViewController-->
         <scene sceneID="V8z-tv-3fX">
             <objects>
-                <viewController storyboardIdentifier="PhotoAlbumViewController" id="Ffu-7v-k6v" userLabel="PhotoAlbumViewController" customClass="PhotoAlbumViewController" customModule="Virtual_Tourist" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="PhotoAlbumViewController" title="Photo Album" id="Ffu-7v-k6v" userLabel="PhotoAlbumViewController" customClass="PhotoAlbumViewController" customModule="Virtual_Tourist" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="zwt-cP-MGC"/>
                         <viewControllerLayoutGuide type="bottom" id="UAV-Kc-boE"/>
@@ -96,8 +95,8 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="ijX-is-guY">
-                                <rect key="frame" x="20" y="182" width="560" height="376"/>
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="ijX-is-guY">
+                                <rect key="frame" x="20" y="180" width="560" height="334"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="DFl-4U-fk1">
                                     <size key="itemSize" width="115" height="107"/>
                                     <size key="headerReferenceSize" width="0.0" height="0.0"/>
@@ -105,7 +104,7 @@
                                     <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 </collectionViewFlowLayout>
                                 <cells>
-                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="CollectionViewCell" id="eN8-QH-CEM" customClass="CollectionViewCell" customModule="Virtual_Tourist" customModuleProvider="target">
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="PhotosCollectionViewCell" id="eN8-QH-CEM" customClass="PhotosCollectionViewCell" customModule="Virtual_Tourist" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="0.0" width="115" height="107"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
@@ -130,7 +129,16 @@
                             </collectionView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="ijX-is-guY" firstAttribute="top" secondItem="zwt-cP-MGC" secondAttribute="bottom" constant="160" id="065-xp-C9O"/>
+                            <constraint firstItem="ijX-is-guY" firstAttribute="leading" secondItem="1If-0v-oqT" secondAttribute="leadingMargin" id="2db-Yl-47n"/>
+                            <constraint firstItem="ijX-is-guY" firstAttribute="trailing" secondItem="1If-0v-oqT" secondAttribute="trailingMargin" id="gpJ-eb-X3y"/>
+                            <constraint firstItem="UAV-Kc-boE" firstAttribute="top" secondItem="ijX-is-guY" secondAttribute="bottom" constant="42" id="kQO-9m-kKx"/>
+                        </constraints>
                     </view>
+                    <toolbarItems/>
+                    <navigationItem key="navigationItem" id="QSj-qp-kOe"/>
+                    <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
                         <outlet property="collectionView" destination="ijX-is-guY" id="x9W-Ud-Iam"/>
                     </connections>
@@ -155,7 +163,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Em0-Hd-QAM" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="319" y="904"/>
+            <point key="canvasLocation" x="328" y="840"/>
         </scene>
     </scenes>
     <resources>
