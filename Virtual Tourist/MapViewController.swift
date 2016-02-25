@@ -48,9 +48,6 @@ class MapViewController: UIViewController,  MKMapViewDelegate, UIGestureRecogniz
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
-
-		
-
 	}
 	
 	override func viewWillAppear(animated: Bool) {
@@ -68,7 +65,7 @@ class MapViewController: UIViewController,  MKMapViewDelegate, UIGestureRecogniz
 		fetchedResultsController.delegate = self
 		
 		for aPin in fetchedResultsController.fetchedObjects as! [Pin] {
-			createPin(aPin)
+			self.createPin(aPin)
 		}
 		
 	}
@@ -77,18 +74,19 @@ class MapViewController: UIViewController,  MKMapViewDelegate, UIGestureRecogniz
 	@IBAction func longPress(sender: AnyObject) {
 		print("long press detected")
 		let recognizer: UILongPressGestureRecognizer = sender as! UILongPressGestureRecognizer
-		let point: CGPoint = recognizer.locationInView(mapView)
-		let locCoords: CLLocationCoordinate2D = mapView.convertPoint(point, toCoordinateFromView: mapView)
-		let newPin = Pin(dictionary: [
-			Pin.Keys.Longitude : locCoords.longitude,
-			Pin.Keys.Latitude : locCoords.latitude
-			], context: self.sharedContext)
-		sharedContext.insertObject(newPin)
-		CoreDataStackManager.sharedInstance().saveContext()
-		let annotation = FlickrAnnotation(withPin: newPin)
-		self.mapView.addAnnotation(annotation)
-		// FIXME: Long presses are being recognized twice instead of just once
-		// TODO: add hold to the recognizer process.
+		if recognizer.state == UIGestureRecognizerState.Ended {
+			let point: CGPoint = recognizer.locationInView(self.mapView)
+			let locCoords: CLLocationCoordinate2D = self.mapView.convertPoint(point, toCoordinateFromView: mapView)
+			let newPin = Pin(dictionary: [
+				Pin.Keys.Longitude : locCoords.longitude,
+				Pin.Keys.Latitude : locCoords.latitude
+				], context: self.sharedContext)
+			sharedContext.insertObject(newPin)
+			CoreDataStackManager.sharedInstance().saveContext()
+			let annotation = FlickrAnnotation(withPin: newPin)
+			self.mapView.addAnnotation(annotation)
+			// TODO: add hold to the recognizer process.
+		}
 	}
 	
 	@IBAction func enableEditing(sender: AnyObject) {
