@@ -99,8 +99,12 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <button opaque="NO" contentMode="center" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AI8-HS-IIh">
+                                <rect key="frame" x="0.0" y="512" width="600" height="30"/>
+                                <state key="normal" title="New Collection"/>
+                            </button>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="ijX-is-guY">
-                                <rect key="frame" x="20" y="180" width="560" height="334"/>
+                                <rect key="frame" x="20" y="143" width="560" height="334"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="DFl-4U-fk1">
                                     <size key="itemSize" width="115" height="107"/>
                                     <size key="headerReferenceSize" width="0.0" height="0.0"/>
@@ -108,7 +112,7 @@
                                     <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 </collectionViewFlowLayout>
                                 <cells>
-                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="PhotosCollectionViewCell" id="eN8-QH-CEM" customClass="PhotosCollectionViewCell" customModule="Virtual_Tourist" customModuleProvider="target">
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" reuseIdentifier="PhotosCollectionViewCell" id="eN8-QH-CEM" customClass="PhotosCollectionViewCell" customModule="Virtual_Tourist" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="0.0" width="115" height="107"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
@@ -134,10 +138,13 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="ijX-is-guY" firstAttribute="top" secondItem="zwt-cP-MGC" secondAttribute="bottom" constant="160" id="065-xp-C9O"/>
+                            <constraint firstItem="ijX-is-guY" firstAttribute="top" secondItem="zwt-cP-MGC" secondAttribute="bottom" constant="123" id="065-xp-C9O"/>
                             <constraint firstItem="ijX-is-guY" firstAttribute="leading" secondItem="1If-0v-oqT" secondAttribute="leadingMargin" id="2db-Yl-47n"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="AI8-HS-IIh" secondAttribute="trailing" constant="-20" id="Hcw-w3-jMD"/>
+                            <constraint firstItem="AI8-HS-IIh" firstAttribute="top" secondItem="ijX-is-guY" secondAttribute="bottom" constant="35" id="LSq-vB-lqo"/>
+                            <constraint firstItem="AI8-HS-IIh" firstAttribute="leading" secondItem="1If-0v-oqT" secondAttribute="leadingMargin" constant="-20" id="MR6-CL-YMj"/>
                             <constraint firstItem="ijX-is-guY" firstAttribute="trailing" secondItem="1If-0v-oqT" secondAttribute="trailingMargin" id="gpJ-eb-X3y"/>
-                            <constraint firstItem="UAV-Kc-boE" firstAttribute="top" secondItem="ijX-is-guY" secondAttribute="bottom" constant="42" id="kQO-9m-kKx"/>
+                            <constraint firstItem="UAV-Kc-boE" firstAttribute="top" secondItem="ijX-is-guY" secondAttribute="bottom" constant="79" id="kQO-9m-kKx"/>
                         </constraints>
                     </view>
                     <toolbarItems/>

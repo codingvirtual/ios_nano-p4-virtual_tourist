@@ -123,25 +123,19 @@ class FlickrService : NSObject {
 				if totalPhotosVal > 0 {
 					if let photosArray = photosDictionary["photo"] as? [[String: AnyObject]] {
 						
-						let photosCount = 9
+						var photosCount = 8
+						if photosCount > photosArray.count {
+							photosCount = photosArray.count
+						}
+						
+						// TODO: handle if there are no photos at all
+						
 						for index in 0...photosCount {
 							var photoDictionary = photosArray[index] as [String: AnyObject]
 							
 							photoDictionary[Photo.Keys.Pin] = withPin
-							//							let imageURL = NSURL(string: imageUrlString!)
-							//
-							//							if let imageData = NSData(contentsOfURL: imageURL!) {
-							//								print(imageURL!)
-							//								dispatch_async(dispatch_get_main_queue(), {
-							//									// do UI stuff here
-							//
-							//								})
-							//							} else {
-							//								print("Image does not exist at \(imageURL)")
-							//							}
 							let photo = Photo(dictionary: photoDictionary, context: usingContext)
 							photo.pin = withPin
-//							withPin.photos.append(photo)
 							CoreDataStackManager.sharedInstance().saveContext()
 						}
 					} else {

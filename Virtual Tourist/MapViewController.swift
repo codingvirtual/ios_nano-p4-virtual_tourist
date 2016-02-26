@@ -66,6 +66,12 @@ class MapViewController: UIViewController,  MKMapViewDelegate, NSFetchedResultsC
 		// Change 2. Set this view controller as the fetched results controller's delegate
 		fetchedResultsController.delegate = self
 		print(fetchedResultsController.fetchedObjects!.count)
+		
+		// FIXME: the following is a kludge to clear annotations. When you go to the album for an annotation
+		// and then return, for some reason a new annotation gets created on the map (but not in CoreData)
+		for anAnnotation in self.mapView.annotations {
+			self.mapView.removeAnnotation(anAnnotation)
+		}
 		for aPin in fetchedResultsController.fetchedObjects as! [Pin] {
 			self.createPin(aPin)
 		}
@@ -151,7 +157,6 @@ class MapViewController: UIViewController,  MKMapViewDelegate, NSFetchedResultsC
 	}
 	
 	func deletePin(thePin: Pin) {
-		// TODO: delete the annotation first.
 		sharedContext.deleteObject(thePin)
 		CoreDataStackManager.sharedInstance().saveContext()
 	}
@@ -164,8 +169,6 @@ class MapViewController: UIViewController,  MKMapViewDelegate, NSFetchedResultsC
 		switch currentMode {
 		case Mode.Normal:
 			let annotation = view.annotation as? FlickrAnnotation
-			print(annotation?.pin.id!.stringValue)
-			print(self.fetchedResultsController.indexPathForObject((annotation?.pin)!))
 			let controller = self.storyboard!.instantiateViewControllerWithIdentifier("PhotoAlbumViewController") as! PhotoAlbumViewController
 			controller.pin = annotation?.pin
 			self.showViewController(controller, sender: self)
