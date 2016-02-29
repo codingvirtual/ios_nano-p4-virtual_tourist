@@ -102,6 +102,9 @@
                             <button opaque="NO" contentMode="center" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AI8-HS-IIh">
                                 <rect key="frame" x="0.0" y="512" width="600" height="30"/>
                                 <state key="normal" title="New Collection"/>
+                                <connections>
+                                    <action selector="getNewCollection:" destination="Ffu-7v-k6v" eventType="touchUpInside" id="hXb-Xi-heA"/>
+                                </connections>
                             </button>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="ijX-is-guY">
                                 <rect key="frame" x="20" y="143" width="560" height="334"/>
@@ -152,6 +155,7 @@
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
                         <outlet property="collectionView" destination="ijX-is-guY" id="x9W-Ud-Iam"/>
+                        <outlet property="newCollectionButton" destination="AI8-HS-IIh" id="jLS-t5-Xwo"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="hkz-bK-fAm" userLabel="First Responder" sceneMemberID="firstResponder"/>

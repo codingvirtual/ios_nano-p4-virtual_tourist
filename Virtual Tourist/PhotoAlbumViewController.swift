@@ -25,6 +25,8 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDataSource, UI
 	
 	@IBOutlet weak var collectionView: UICollectionView!
 	
+	@IBOutlet weak var newCollectionButton: UIButton!
+	
 	var sharedContext = CoreDataStackManager.sharedInstance().managedObjectContext
 	let imageCache = (UIApplication.sharedApplication().delegate as! AppDelegate).imageCache
 	
@@ -40,14 +42,14 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDataSource, UI
 		// Start the fetched results controller
 		do {
 			try fetchedResultsController.performFetch()
+			print("COUNT:")
+			print(fetchedResultsController.fetchedObjects!.count)
 		} catch _ {
-			print ("core data error")
+		print ("core data error")
 		}
 		
 		if fetchedResultsController.fetchedObjects?.count == 0 {
 			FlickrService.sharedInstance().taskForResource(self.pin, usingContext: self.sharedContext) {result, error in
-				print(result)
-				// now set up a task to go download all the images
 			}
 		} else {
 			print("pin has stored photos")
@@ -70,26 +72,23 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDataSource, UI
 		collectionView.collectionViewLayout = layout
 	}
 	
+	@IBAction func getNewCollection(sender: AnyObject) {
+		print("button clicked")
+		let photos = fetchedResultsController.fetchedObjects as! [Photo]
+		for aPhoto in photos {
+			aPhoto.pin = nil
+			sharedContext.deleteObject(aPhoto)
+		}
+		do {
+			try sharedContext.save()
+		} catch _ {
+			print("error saving context")
+		}
+	}
 	
 	// MARK: - Configure Cell
 	
 	func configureCell(cell: PhotosCollectionViewCell, atIndexPath indexPath: NSIndexPath) {
-		
-		//		var task: NSURLSessionTask = NSURLSessionTask()
-		//		let withPhoto = fetchedResultsController.objectAtIndexPath(indexPath) as! Photo
-		//		if let image = imageCache.imageWithIdentifier(withPhoto.id?.stringValue) {
-		//			withPhoto.image = image
-		//			dispatch_async(dispatch_get_main_queue()) {
-		//				cell.imageView!.image = withPhoto.image
-		//			}
-		//		} else {
-		//			task = FlickrService.sharedInstance().taskForImage(withPhoto, completionHandler: nil)
-		//			dispatch_async(dispatch_get_main_queue()) {
-		//				cell.imageView!.image = withPhoto.image
-		//			}
-		//		}
-		
-		//		cell.taskToCancelifCellIsReused = task
 		let photo = fetchedResultsController.objectAtIndexPath(indexPath) as! Photo
 		dispatch_async(dispatch_get_main_queue()) {
 			cell.imageView!.image = photo.image
