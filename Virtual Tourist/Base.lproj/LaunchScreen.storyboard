@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9531" systemVersion="15D9c" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES" initialViewController="01J-lp-oVM">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9532" systemVersion="15D21" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES" initialViewController="01J-lp-oVM">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9529"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9530"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
     </dependencies>
     <scenes>
         <!--View Controller-->
@@ -17,17 +18,37 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Virtual Tourist Portfolio Application" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cEh-ZU-6ER">
-                                <rect key="frame" x="154" y="81" width="266" height="56"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="IMG_0566" translatesAutoresizingMaskIntoConstraints="NO" id="HEx-Im-wCb">
-                                <rect key="frame" x="180" y="217" width="240" height="291"/>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="g2X-wE-HJz">
+                                <rect key="frame" x="167" y="57" width="266" height="21"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Virtual Tourist Portfolio Application" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cEh-ZU-6ER">
+                                        <rect key="frame" x="0.0" y="0.0" width="266" height="21"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstItem="cEh-ZU-6ER" firstAttribute="centerX" secondItem="g2X-wE-HJz" secondAttribute="centerX" id="WmH-gk-kXE"/>
+                                </constraints>
+                            </stackView>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="IMG_0566" translatesAutoresizingMaskIntoConstraints="NO" id="HEx-Im-wCb">
+                                <rect key="frame" x="180" y="199" width="240" height="291"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="291" id="RxZ-uh-M2z"/>
+                                    <constraint firstAttribute="width" secondItem="HEx-Im-wCb" secondAttribute="height" multiplier="80:97" id="bQS-ev-qu4"/>
+                                </constraints>
                             </imageView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="HEx-Im-wCb" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="4Pk-KR-AMg"/>
+                            <constraint firstItem="g2X-wE-HJz" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="O9N-Sb-khl"/>
+                            <constraint firstItem="cEh-ZU-6ER" firstAttribute="top" secondItem="Llm-lL-Icb" secondAttribute="bottom" constant="37" id="TUT-qB-JyR"/>
+                            <constraint firstAttribute="bottom" secondItem="g2X-wE-HJz" secondAttribute="bottom" constant="522" id="fZK-WC-Jba"/>
+                            <constraint firstItem="g2X-wE-HJz" firstAttribute="top" secondItem="Llm-lL-Icb" secondAttribute="bottom" constant="37" id="hsT-9w-9vp"/>
+                            <constraint firstItem="xb3-aO-Qok" firstAttribute="top" secondItem="HEx-Im-wCb" secondAttribute="bottom" constant="110" id="jS2-gl-gKe"/>
+                        </constraints>
                     </view>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="iYj-Kq-Ea1" userLabel="First Responder" sceneMemberID="firstResponder"/>
