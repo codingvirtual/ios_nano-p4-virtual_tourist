@@ -49,8 +49,7 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDataSource, UI
 		}
 		
 		if fetchedResultsController.fetchedObjects?.count == 0 {
-			FlickrService.sharedInstance().taskForResource(self.pin, usingContext: self.sharedContext) {result, error in
-			}
+			getPhotos()
 		} else {
 			print("pin has stored photos")
 		}
@@ -84,6 +83,7 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDataSource, UI
 		} catch _ {
 			print("error saving context")
 		}
+		getPhotos()
 	}
 	
 	// MARK: - Configure Cell
@@ -96,7 +96,10 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDataSource, UI
 		
 	}
 	
-	
+	func getPhotos() {
+		FlickrService.sharedInstance().taskForResource(self.pin, usingContext: self.sharedContext) {result, error in
+		}
+	}
 	// MARK: - UICollectionView
 	
 	func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int {

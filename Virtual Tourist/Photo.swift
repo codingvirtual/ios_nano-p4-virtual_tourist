@@ -109,14 +109,16 @@ class Photo : NSManagedObject {
 		
 	}
 	
-	deinit {
-//		let fileManager = NSFileManager.defaultManager()
-//		let documentsDirectoryURL: NSURL = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask).first!
-//		let imageFile = documentsDirectoryURL.URLByAppendingPathComponent((self.id?.stringValue)!)
-//		do {
-//			try fileManager.removeItemAtURL(imageFile)
-//		} catch _ {
-//			// add error handling
-//		}
+	override func prepareForDeletion() {
+		super.prepareForDeletion()
+		let fileManager = NSFileManager.defaultManager()
+		let documentsDirectoryURL: NSURL = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask).first!
+		let imageFile = documentsDirectoryURL.URLByAppendingPathComponent((self.id?.stringValue)!)
+		do {
+			try fileManager.removeItemAtURL(imageFile)
+		} catch _ {
+			// add error handling
+		}
 	}
+
 }
