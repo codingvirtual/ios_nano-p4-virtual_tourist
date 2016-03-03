@@ -54,7 +54,7 @@ class MapViewController: UIViewController,  MKMapViewDelegate, NSFetchedResultsC
 
 	override func viewWillAppear(animated: Bool) {
 		super.viewWillAppear(animated)
-		
+		self.title = "Virtual Tourist"
 		// set up any additional UI here
 		do {
 			try fetchedResultsController.performFetch()
@@ -75,6 +75,7 @@ class MapViewController: UIViewController,  MKMapViewDelegate, NSFetchedResultsC
 		for aPin in fetchedResultsController.fetchedObjects as! [Pin] {
 			self.createPin(aPin)
 		}
+
 		
 	}
 	// MARK: - UI-related Code
@@ -171,6 +172,7 @@ class MapViewController: UIViewController,  MKMapViewDelegate, NSFetchedResultsC
 			let annotation = view.annotation as? FlickrAnnotation
 			let controller = self.storyboard!.instantiateViewControllerWithIdentifier("PhotoAlbumViewController") as! PhotoAlbumViewController
 			controller.pin = annotation?.pin
+			self.title = "OK"
 			self.showViewController(controller, sender: self)
 		case Mode.Editing:
 			print("delete this")

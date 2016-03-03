@@ -25,20 +25,19 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDataSource, UI
 	
 	@IBOutlet weak var collectionView: UICollectionView!
 	
-	@IBOutlet weak var newCollectionButton: UIButton!
+	@IBOutlet weak var buttonNewCollection: UIButton!
+	
+	@IBOutlet weak var buttonDelete: UIButton!
 	
 	var sharedContext = CoreDataStackManager.sharedInstance().managedObjectContext
 	let imageCache = (UIApplication.sharedApplication().delegate as! AppDelegate).imageCache
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
-		
 	}
-	
 	
 	override func viewWillAppear(animated: Bool) {
 		super.viewWillAppear(animated)
-		
 		// Start the fetched results controller
 		do {
 			try fetchedResultsController.performFetch()
@@ -72,7 +71,6 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDataSource, UI
 	}
 	
 	@IBAction func getNewCollection(sender: AnyObject) {
-		print("button clicked")
 		let photos = fetchedResultsController.fetchedObjects as! [Photo]
 		for aPhoto in photos {
 			aPhoto.pin = nil
@@ -86,10 +84,40 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDataSource, UI
 		getPhotos()
 	}
 	
+	@IBAction func doPhotoDelete(sender: AnyObject) {
+		var photosToDelete = [Photo]()
+		
+		for indexPath in selectedIndexes {
+			photosToDelete.append(fetchedResultsController.objectAtIndexPath(indexPath) as! Photo)
+		}
+		
+		for photo in photosToDelete {
+			sharedContext.deleteObject(photo)
+		}
+		
+		do {
+			try sharedContext.save()
+		} catch _ {
+			print("error saving context")
+		}
+		
+		selectedIndexes = [NSIndexPath]()
+		
+		buttonNewCollection.hidden = false
+		buttonDelete.hidden = true
+	}
+	
 	// MARK: - Configure Cell
 	
 	func configureCell(cell: PhotosCollectionViewCell, atIndexPath indexPath: NSIndexPath) {
 		let photo = fetchedResultsController.objectAtIndexPath(indexPath) as! Photo
+		
+		if let _ = selectedIndexes.indexOf(indexPath) {
+			cell.imageView.alpha = 0.25
+		} else {
+			cell.imageView.alpha = 1.0
+		}
+		
 		dispatch_async(dispatch_get_main_queue()) {
 			cell.imageView!.image = photo.image
 		}
@@ -119,20 +147,33 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDataSource, UI
 		
 		return cell
 	}
-	
+
 	func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
 		
-//		let cell = collectionView.cellForItemAtIndexPath(indexPath) as! PhotosCollectionViewCell
-//		
-//		// Whenever a cell is tapped we will toggle its presence in the selectedIndexes array
-//		if let index = selectedIndexes.indexOf(indexPath) {
-//			selectedIndexes.removeAtIndex(index)
-//		} else {
-//			selectedIndexes.append(indexPath)
-//		}
-//		
-//		// Then reconfigure the cell
-//		configureCell(cell, atIndexPath: indexPath)
+
+		
+		let cell = collectionView.cellForItemAtIndexPath(indexPath) as! PhotosCollectionViewCell
+		
+		// Whenever a cell is tapped we will toggle its presence in the selectedIndexes array
+		if let index = selectedIndexes.indexOf(indexPath) {
+			selectedIndexes.removeAtIndex(index)
+			print("found in selectedIndexes")
+		} else {
+			selectedIndexes.append(indexPath)
+			print("added to selectedIndexes")
+		}
+		
+		print(selectedIndexes.count)
+		if selectedIndexes.count == 0 {
+			buttonNewCollection.hidden = false
+			buttonDelete.hidden = true
+		} else {
+			buttonNewCollection.hidden = true
+			buttonDelete.hidden = false
+		}
+		
+		// Then reconfigure the cell
+		configureCell(cell, atIndexPath: indexPath)
 		
 	}
 	

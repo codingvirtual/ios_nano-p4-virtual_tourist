@@ -99,11 +99,18 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="center" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AI8-HS-IIh">
+                            <button contentMode="center" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AI8-HS-IIh">
                                 <rect key="frame" x="0.0" y="512" width="600" height="30"/>
                                 <state key="normal" title="New Collection"/>
                                 <connections>
                                     <action selector="getNewCollection:" destination="Ffu-7v-k6v" eventType="touchUpInside" id="hXb-Xi-heA"/>
+                                </connections>
+                            </button>
+                            <button hidden="YES" contentMode="center" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uXr-eJ-S7b" userLabel="Button Delete Selected">
+                                <rect key="frame" x="0.0" y="499" width="600" height="57"/>
+                                <state key="normal" title="Delete Selected Photos"/>
+                                <connections>
+                                    <action selector="doPhotoDelete:" destination="Ffu-7v-k6v" eventType="touchUpInside" id="lTc-hN-ai3"/>
                                 </connections>
                             </button>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="ijX-is-guY">
@@ -115,19 +122,28 @@
                                     <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 </collectionViewFlowLayout>
                                 <cells>
-                                    <collectionViewCell opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" reuseIdentifier="PhotosCollectionViewCell" id="eN8-QH-CEM" customClass="PhotosCollectionViewCell" customModule="Virtual_Tourist" customModuleProvider="target">
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" contentMode="scaleAspectFit" reuseIdentifier="PhotosCollectionViewCell" id="eN8-QH-CEM" customClass="PhotosCollectionViewCell" customModule="Virtual_Tourist" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="0.0" width="115" height="107"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                             <rect key="frame" x="0.0" y="0.0" width="115" height="107"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="IMG_0566" translatesAutoresizingMaskIntoConstraints="NO" id="5Kc-5m-ogI">
+                                                <imageView contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="IMG_0566" translatesAutoresizingMaskIntoConstraints="NO" id="5Kc-5m-ogI">
                                                     <rect key="frame" x="0.0" y="0.0" width="115" height="107"/>
+                                                    <accessibility key="accessibilityConfiguration">
+                                                        <accessibilityTraits key="traits" image="YES" notEnabled="YES"/>
+                                                    </accessibility>
                                                 </imageView>
                                             </subviews>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </view>
+                                        <constraints>
+                                            <constraint firstAttribute="bottom" secondItem="5Kc-5m-ogI" secondAttribute="bottom" id="7Hi-sH-KzM"/>
+                                            <constraint firstItem="5Kc-5m-ogI" firstAttribute="leading" secondItem="eN8-QH-CEM" secondAttribute="leading" id="IrZ-5D-Tbf"/>
+                                            <constraint firstItem="5Kc-5m-ogI" firstAttribute="top" secondItem="eN8-QH-CEM" secondAttribute="top" id="cQM-kw-KRg"/>
+                                            <constraint firstAttribute="trailing" secondItem="5Kc-5m-ogI" secondAttribute="trailing" id="rQN-We-g8y"/>
+                                        </constraints>
                                         <connections>
                                             <outlet property="imageView" destination="5Kc-5m-ogI" id="9Zj-Ty-2jL"/>
                                         </connections>
@@ -135,7 +151,7 @@
                                 </cells>
                                 <connections>
                                     <outlet property="dataSource" destination="Ffu-7v-k6v" id="co6-R2-Zg6"/>
-                                    <outlet property="delegate" destination="Ffu-7v-k6v" id="Y2y-mn-UA8"/>
+                                    <outlet property="delegate" destination="Ffu-7v-k6v" id="KhS-og-aiU"/>
                                 </connections>
                             </collectionView>
                         </subviews>
@@ -146,7 +162,11 @@
                             <constraint firstAttribute="trailingMargin" secondItem="AI8-HS-IIh" secondAttribute="trailing" constant="-20" id="Hcw-w3-jMD"/>
                             <constraint firstItem="AI8-HS-IIh" firstAttribute="top" secondItem="ijX-is-guY" secondAttribute="bottom" constant="35" id="LSq-vB-lqo"/>
                             <constraint firstItem="AI8-HS-IIh" firstAttribute="leading" secondItem="1If-0v-oqT" secondAttribute="leadingMargin" constant="-20" id="MR6-CL-YMj"/>
+                            <constraint firstItem="uXr-eJ-S7b" firstAttribute="bottom" secondItem="UAV-Kc-boE" secondAttribute="top" id="MWQ-mY-qhZ"/>
+                            <constraint firstItem="uXr-eJ-S7b" firstAttribute="leading" secondItem="AI8-HS-IIh" secondAttribute="leading" id="WFh-qJ-gLq"/>
                             <constraint firstItem="ijX-is-guY" firstAttribute="trailing" secondItem="1If-0v-oqT" secondAttribute="trailingMargin" id="gpJ-eb-X3y"/>
+                            <constraint firstItem="uXr-eJ-S7b" firstAttribute="trailing" secondItem="AI8-HS-IIh" secondAttribute="trailing" id="jJa-XQ-KDv"/>
+                            <constraint firstItem="uXr-eJ-S7b" firstAttribute="top" secondItem="ijX-is-guY" secondAttribute="bottom" constant="22" id="jY4-Vt-ukT"/>
                             <constraint firstItem="UAV-Kc-boE" firstAttribute="top" secondItem="ijX-is-guY" secondAttribute="bottom" constant="79" id="kQO-9m-kKx"/>
                         </constraints>
                     </view>
@@ -154,8 +174,9 @@
                     <navigationItem key="navigationItem" id="QSj-qp-kOe"/>
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
+                        <outlet property="buttonDelete" destination="uXr-eJ-S7b" id="nrf-sF-1Cg"/>
+                        <outlet property="buttonNewCollection" destination="AI8-HS-IIh" id="JN1-A0-50J"/>
                         <outlet property="collectionView" destination="ijX-is-guY" id="x9W-Ud-Iam"/>
-                        <outlet property="newCollectionButton" destination="AI8-HS-IIh" id="jLS-t5-Xwo"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="hkz-bK-fAm" userLabel="First Responder" sceneMemberID="firstResponder"/>
