@@ -117,13 +117,13 @@ class FlickrService : NSObject {
 					totalPhotosVal = (totalPhotos as NSString).integerValue
 				}
 				
-				if totalPhotosVal > 9 {
-					totalPhotosVal = 9
+				if totalPhotosVal > 12 {
+					totalPhotosVal = 12
 				}
 				if totalPhotosVal > 0 {
 					if let photosArray = photosDictionary["photo"] as? [[String: AnyObject]] {
 						
-						var photosCount = 8
+						var photosCount = 11
 						if photosCount > photosArray.count {
 							photosCount = photosArray.count
 						}

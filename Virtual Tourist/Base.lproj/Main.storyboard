@@ -99,22 +99,16 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button contentMode="center" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AI8-HS-IIh">
-                                <rect key="frame" x="0.0" y="512" width="600" height="30"/>
-                                <state key="normal" title="New Collection"/>
-                                <connections>
-                                    <action selector="getNewCollection:" destination="Ffu-7v-k6v" eventType="touchUpInside" id="hXb-Xi-heA"/>
-                                </connections>
-                            </button>
                             <button hidden="YES" contentMode="center" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uXr-eJ-S7b" userLabel="Button Delete Selected">
-                                <rect key="frame" x="0.0" y="499" width="600" height="57"/>
+                                <rect key="frame" x="0.0" y="525" width="600" height="30"/>
                                 <state key="normal" title="Delete Selected Photos"/>
                                 <connections>
                                     <action selector="doPhotoDelete:" destination="Ffu-7v-k6v" eventType="touchUpInside" id="lTc-hN-ai3"/>
                                 </connections>
                             </button>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="ijX-is-guY">
-                                <rect key="frame" x="20" y="143" width="560" height="334"/>
+                                <rect key="frame" x="10" y="143" width="580" height="383"/>
+                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="DFl-4U-fk1">
                                     <size key="itemSize" width="115" height="107"/>
                                     <size key="headerReferenceSize" width="0.0" height="0.0"/>
@@ -138,6 +132,7 @@
                                             </subviews>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </view>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <constraints>
                                             <constraint firstAttribute="bottom" secondItem="5Kc-5m-ogI" secondAttribute="bottom" id="7Hi-sH-KzM"/>
                                             <constraint firstItem="5Kc-5m-ogI" firstAttribute="leading" secondItem="eN8-QH-CEM" secondAttribute="leading" id="IrZ-5D-Tbf"/>
@@ -154,20 +149,26 @@
                                     <outlet property="delegate" destination="Ffu-7v-k6v" id="KhS-og-aiU"/>
                                 </connections>
                             </collectionView>
+                            <button contentMode="center" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AI8-HS-IIh">
+                                <rect key="frame" x="0.0" y="525" width="600" height="30"/>
+                                <state key="normal" title="New Collection"/>
+                                <connections>
+                                    <action selector="getNewCollection:" destination="Ffu-7v-k6v" eventType="touchUpInside" id="hXb-Xi-heA"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="ijX-is-guY" firstAttribute="top" secondItem="zwt-cP-MGC" secondAttribute="bottom" constant="123" id="065-xp-C9O"/>
-                            <constraint firstItem="ijX-is-guY" firstAttribute="leading" secondItem="1If-0v-oqT" secondAttribute="leadingMargin" id="2db-Yl-47n"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="AI8-HS-IIh" secondAttribute="trailing" constant="-20" id="Hcw-w3-jMD"/>
-                            <constraint firstItem="AI8-HS-IIh" firstAttribute="top" secondItem="ijX-is-guY" secondAttribute="bottom" constant="35" id="LSq-vB-lqo"/>
-                            <constraint firstItem="AI8-HS-IIh" firstAttribute="leading" secondItem="1If-0v-oqT" secondAttribute="leadingMargin" constant="-20" id="MR6-CL-YMj"/>
-                            <constraint firstItem="uXr-eJ-S7b" firstAttribute="bottom" secondItem="UAV-Kc-boE" secondAttribute="top" id="MWQ-mY-qhZ"/>
-                            <constraint firstItem="uXr-eJ-S7b" firstAttribute="leading" secondItem="AI8-HS-IIh" secondAttribute="leading" id="WFh-qJ-gLq"/>
-                            <constraint firstItem="ijX-is-guY" firstAttribute="trailing" secondItem="1If-0v-oqT" secondAttribute="trailingMargin" id="gpJ-eb-X3y"/>
-                            <constraint firstItem="uXr-eJ-S7b" firstAttribute="trailing" secondItem="AI8-HS-IIh" secondAttribute="trailing" id="jJa-XQ-KDv"/>
-                            <constraint firstItem="uXr-eJ-S7b" firstAttribute="top" secondItem="ijX-is-guY" secondAttribute="bottom" constant="22" id="jY4-Vt-ukT"/>
-                            <constraint firstItem="UAV-Kc-boE" firstAttribute="top" secondItem="ijX-is-guY" secondAttribute="bottom" constant="79" id="kQO-9m-kKx"/>
+                            <constraint firstItem="UAV-Kc-boE" firstAttribute="top" secondItem="ijX-is-guY" secondAttribute="bottom" constant="30" id="6iv-Be-wWs"/>
+                            <constraint firstItem="AI8-HS-IIh" firstAttribute="top" secondItem="uXr-eJ-S7b" secondAttribute="bottom" constant="-30" id="Btx-f1-9uD"/>
+                            <constraint firstItem="ijX-is-guY" firstAttribute="trailing" secondItem="1If-0v-oqT" secondAttribute="trailingMargin" constant="10" id="I7m-ay-Kcn"/>
+                            <constraint firstItem="AI8-HS-IIh" firstAttribute="leading" secondItem="1If-0v-oqT" secondAttribute="leading" id="OcD-iW-Qgw"/>
+                            <constraint firstItem="UAV-Kc-boE" firstAttribute="top" secondItem="AI8-HS-IIh" secondAttribute="bottom" constant="1" id="Ofi-ab-kyh"/>
+                            <constraint firstItem="AI8-HS-IIh" firstAttribute="centerX" secondItem="ijX-is-guY" secondAttribute="centerX" id="oe5-e6-I2l"/>
+                            <constraint firstItem="ijX-is-guY" firstAttribute="leading" secondItem="1If-0v-oqT" secondAttribute="leadingMargin" constant="-10" id="pMZ-bg-x7r"/>
+                            <constraint firstItem="AI8-HS-IIh" firstAttribute="trailing" secondItem="uXr-eJ-S7b" secondAttribute="trailing" id="sdK-by-im4"/>
+                            <constraint firstItem="AI8-HS-IIh" firstAttribute="leading" secondItem="uXr-eJ-S7b" secondAttribute="leading" id="z8B-xP-qHD"/>
                         </constraints>
                     </view>
                     <toolbarItems/>
