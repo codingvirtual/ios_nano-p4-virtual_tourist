@@ -38,13 +38,14 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDataSource, UI
 	
 	override func viewWillAppear(animated: Bool) {
 		super.viewWillAppear(animated)
+		
 		// Start the fetched results controller
 		do {
 			try fetchedResultsController.performFetch()
 			print("COUNT:")
 			print(fetchedResultsController.fetchedObjects!.count)
 		} catch _ {
-		print ("core data error")
+			print ("core data error")
 		}
 		
 		if fetchedResultsController.fetchedObjects?.count == 0 {
@@ -73,7 +74,6 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDataSource, UI
 	@IBAction func getNewCollection(sender: AnyObject) {
 		let photos = fetchedResultsController.fetchedObjects as! [Photo]
 		for aPhoto in photos {
-			aPhoto.pin = nil
 			sharedContext.deleteObject(aPhoto)
 		}
 		do {
@@ -147,10 +147,10 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDataSource, UI
 		
 		return cell
 	}
-
+	
 	func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
 		
-
+		
 		
 		let cell = collectionView.cellForItemAtIndexPath(indexPath) as! PhotosCollectionViewCell
 		
@@ -163,6 +163,8 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDataSource, UI
 			print("added to selectedIndexes")
 		}
 		
+		// FIXME: if you delete photos then try to hit New Collection, it blows up. Need to actually delete the photos from
+		// the context below to prevent dangling reference later.
 		print(selectedIndexes.count)
 		if selectedIndexes.count == 0 {
 			buttonNewCollection.hidden = false
