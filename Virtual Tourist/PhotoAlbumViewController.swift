@@ -30,7 +30,6 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDataSource, UI
 	@IBOutlet weak var buttonDelete: UIButton!
 	
 	var sharedContext = CoreDataStackManager.sharedInstance().managedObjectContext
-	let imageCache = (UIApplication.sharedApplication().delegate as! AppDelegate).imageCache
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -91,8 +90,8 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDataSource, UI
 			photosToDelete.append(fetchedResultsController.objectAtIndexPath(indexPath) as! Photo)
 		}
 		
-		for photo in photosToDelete {
-			sharedContext.deleteObject(photo)
+		for aPhoto in photosToDelete {
+			sharedContext.deleteObject(aPhoto)
 		}
 		
 		do {
@@ -125,6 +124,7 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDataSource, UI
 	}
 	
 	func getPhotos() {
+
 		FlickrService.sharedInstance().taskForResource(self.pin, usingContext: self.sharedContext) {result, error in
 		}
 	}
