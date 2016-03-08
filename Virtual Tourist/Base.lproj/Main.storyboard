@@ -123,12 +123,15 @@
                                             <rect key="frame" x="0.0" y="0.0" width="115" height="107"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <imageView contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="IMG_0566" translatesAutoresizingMaskIntoConstraints="NO" id="5Kc-5m-ogI">
+                                                <imageView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="IMG_0566" translatesAutoresizingMaskIntoConstraints="NO" id="5Kc-5m-ogI">
                                                     <rect key="frame" x="0.0" y="0.0" width="115" height="107"/>
                                                     <accessibility key="accessibilityConfiguration">
                                                         <accessibilityTraits key="traits" image="YES" notEnabled="YES"/>
                                                     </accessibility>
                                                 </imageView>
+                                                <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="UZh-Sj-rZq">
+                                                    <rect key="frame" x="47" y="44" width="20" height="20"/>
+                                                </activityIndicatorView>
                                             </subviews>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </view>
@@ -140,6 +143,7 @@
                                             <constraint firstAttribute="trailing" secondItem="5Kc-5m-ogI" secondAttribute="trailing" id="rQN-We-g8y"/>
                                         </constraints>
                                         <connections>
+                                            <outlet property="activityIndicator" destination="UZh-Sj-rZq" id="h1l-fP-1Ot"/>
                                             <outlet property="imageView" destination="5Kc-5m-ogI" id="9Zj-Ty-2jL"/>
                                         </connections>
                                     </collectionViewCell>

@@ -13,14 +13,9 @@ class PhotosCollectionViewCell : UICollectionViewCell {
 	
 	@IBOutlet weak var imageView: UIImageView!
 	
-	var image: UIImage {
-		set {
-			self.imageView.image = newValue
-		}
-		get {
-			return self.imageView.image!
-		}
-	}
+	@IBOutlet weak var activityIndicator: UIActivityIndicatorView!
+	
+	var image: UIImage?
 	
 	var taskToCancelifCellIsReused: NSURLSessionTask? {
 		

@@ -109,6 +109,9 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDataSource, UI
 	// MARK: - Configure Cell
 	
 	func configureCell(cell: PhotosCollectionViewCell, atIndexPath indexPath: NSIndexPath) {
+		cell.activityIndicator.hidden = false
+		cell.activityIndicator.startAnimating()
+		cell.imageView!.hidden = true
 		let photo = fetchedResultsController.objectAtIndexPath(indexPath) as! Photo
 		
 		if let _ = selectedIndexes.indexOf(indexPath) {
@@ -118,6 +121,7 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDataSource, UI
 		}
 		
 		dispatch_async(dispatch_get_main_queue()) {
+			cell.imageView!.hidden = false
 			cell.imageView!.image = photo.image
 		}
 		
@@ -149,8 +153,6 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDataSource, UI
 	}
 	
 	func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
-		
-		
 		
 		let cell = collectionView.cellForItemAtIndexPath(indexPath) as! PhotosCollectionViewCell
 		

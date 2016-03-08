@@ -180,6 +180,52 @@ class FlickrService : NSObject {
 		return task
 	}
 	
+//	// This code downloads the huge image in a global queue and uses a completion
+//	// closure.
+//	@IBAction func asynchronousDownload(sender: UIBarButtonItem) {
+//		
+//		// hide current image
+//		photoView.image = nil
+//		
+//		// start animation
+//		activityView.startAnimating()
+//		
+//		withBigImage { (image) -> Void in
+//			// Display it
+//			self.photoView.image = image
+//			
+//			// Stop animating
+//			self.activityView.stopAnimating()
+//		}
+//	}
+//	
+//	// This method downloads and image in the background once it's
+//	// finished, it runs the closure it receives as a parameter.
+//	// This closure is called a completion handler
+//	// Go download the image, and once you're done, do _this_ (the completion handler)
+//	func withBigImage(completionHandler handler: (image: UIImage) -> Void){
+//		
+//		
+//		
+//		dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0)) { () -> Void in
+//			
+//			// get the url
+//			// get the NSData
+//			// turn it into a UIImage
+//			if let url = NSURL(string: BigImages.whale.rawValue),
+//				let imgData = NSData(contentsOfURL: url),
+//				let img = UIImage(data: imgData){
+//					
+//					// run the completion block
+//					// always in the main queue, just in case!
+//					dispatch_async(dispatch_get_main_queue(), { () -> Void in
+//						handler(image: img)
+//						
+//						
+//					})
+//			}
+//		}
+//	}
 	
 	/* Helper function: Given a dictionary of parameters, convert to a string for a url */
 	class func escapedParameters(parameters: [String : AnyObject]) -> String {
