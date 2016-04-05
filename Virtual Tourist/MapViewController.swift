@@ -12,6 +12,8 @@ import MapKit
 
 class MapViewController: UIViewController,  MKMapViewDelegate, NSFetchedResultsControllerDelegate {
 	
+	// TODO: Persist center of map and zoom level
+	
 	// MARK: - Variables and Outlets
 	
 	enum Mode {
@@ -42,6 +44,8 @@ class MapViewController: UIViewController,  MKMapViewDelegate, NSFetchedResultsC
 	
 	@IBOutlet weak var messageField: UILabel!
 	
+	var activeAnnotation = MKPointAnnotation()
+	
 	var sharedContext: NSManagedObjectContext {
 		return CoreDataStackManager.sharedInstance().managedObjectContext
 	}
@@ -50,10 +54,15 @@ class MapViewController: UIViewController,  MKMapViewDelegate, NSFetchedResultsC
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
+		
 	}
-
+	
 	override func viewWillAppear(animated: Bool) {
 		super.viewWillAppear(animated)
+		let defaults = NSUserDefaults.standardUserDefaults()
+		if let data = defaults.objectForKey("camera") as? NSData {
+			self.mapView.camera = NSKeyedUnarchiver.unarchiveObjectWithData(data) as! MKMapCamera
+		}
 		self.title = "Virtual Tourist"
 		// set up any additional UI here
 		do {
@@ -75,19 +84,25 @@ class MapViewController: UIViewController,  MKMapViewDelegate, NSFetchedResultsC
 		for aPin in fetchedResultsController.fetchedObjects as! [Pin] {
 			self.createPin(aPin)
 		}
-
-		
+	}
+	
+	override func viewWillDisappear(animated: Bool) {
+		super.viewWillDisappear(animated)
+		let defaults = NSUserDefaults.standardUserDefaults()
+		let data = NSKeyedArchiver.archivedDataWithRootObject(self.mapView.camera)
+		defaults.setObject(data, forKey: "camera")
 	}
 	// MARK: - UI-related Code
 	
 	@IBAction func handleGesture() {
-		print("long press detected")
 		if longPressRecognizer.state == UIGestureRecognizerState.Began {
-			print("gesture began")
+			let point: CGPoint = longPressRecognizer.locationInView(self.mapView)
+			let locCoords: CLLocationCoordinate2D = self.mapView.convertPoint(point, toCoordinateFromView: mapView)
+			self.activeAnnotation.coordinate = locCoords
+			self.mapView.addAnnotation(activeAnnotation)
 		}
 		if longPressRecognizer.state == UIGestureRecognizerState.Ended {
-			print("now adding annotation")
-
+			self.mapView.removeAnnotation(activeAnnotation)
 			let point: CGPoint = longPressRecognizer.locationInView(self.mapView)
 			let locCoords: CLLocationCoordinate2D = self.mapView.convertPoint(point, toCoordinateFromView: mapView)
 			let newPin = Pin(dictionary: [
@@ -95,9 +110,42 @@ class MapViewController: UIViewController,  MKMapViewDelegate, NSFetchedResultsC
 				Pin.Keys.Latitude : locCoords.latitude
 				], context: self.sharedContext)
 			sharedContext.insertObject(newPin)
+			// fetch photos here
+			// TODO: Handle if no images are returned
+			FlickrService.sharedInstance().taskForImageURLs(newPin) {result, error in
+				if error == nil {
+					if let photosArray = result as? [[String: AnyObject]] {
+						if photosArray.count > 0 {
+							let maxImages = photosArray.count < Pin.maxPhotos ? (photosArray.count - 1) : (Pin.maxPhotos - 1)
+							for index in 0...maxImages {
+								var photoDictionary = photosArray[index] as [String:AnyObject]
+								photoDictionary[Photo.Keys.Pin] = newPin
+								let newPhoto = Photo(dictionary: photoDictionary, context: self.sharedContext)
+								dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0)) {
+									newPhoto.fetchImageData() {
+										dispatch_async(dispatch_get_main_queue(), {
+											do {
+												try self.sharedContext.save()
+											} catch _ {}
+										})
+									}
+								}
+							}
+						} else {
+							// no images found
+							print("no images")
+						}
+					}
+				} else {
+					print("an error occurred returning from fetching image URL's from Flickr")
+				}
+			}
 			CoreDataStackManager.sharedInstance().saveContext()
-
-			// TODO: add hold to the recognizer process.
+		}
+		if longPressRecognizer.state == UIGestureRecognizerState.Changed {
+			let point: CGPoint = longPressRecognizer.locationInView(self.mapView)
+			let locCoords: CLLocationCoordinate2D = self.mapView.convertPoint(point, toCoordinateFromView: mapView)
+			activeAnnotation.coordinate = locCoords
 		}
 	}
 	
@@ -112,7 +160,7 @@ class MapViewController: UIViewController,  MKMapViewDelegate, NSFetchedResultsC
 				self.mapView.frame.origin.y -= self.messageField.frame.height
 				self.messageField.frame.origin.y -= self.messageField.frame.height
 			})
-
+			
 		case Mode.Editing:
 			currentMode = Mode.Normal
 			title.replaceCharactersInRange(NSRange(location: 0,length: title.length), withString: "Edit")
@@ -134,8 +182,8 @@ class MapViewController: UIViewController,  MKMapViewDelegate, NSFetchedResultsC
 		// until it receives endUpdates(), and then perform them all at once.
 		print("controller will change content")
 	}
-
-
+	
+	
 	func controller(controller: NSFetchedResultsController, didChangeObject anObject: AnyObject, atIndexPath indexPath: NSIndexPath?, forChangeType type: NSFetchedResultsChangeType, newIndexPath: NSIndexPath?) {
 		print("controller did change object")
 		switch type {
@@ -161,11 +209,9 @@ class MapViewController: UIViewController,  MKMapViewDelegate, NSFetchedResultsC
 		sharedContext.deleteObject(thePin)
 		CoreDataStackManager.sharedInstance().saveContext()
 	}
-
 	
-
 	// MARK: - MKMapViewDelegate
-
+	
 	func mapView(mapView: MKMapView, didSelectAnnotationView view: MKAnnotationView) {
 		switch currentMode {
 		case Mode.Normal:

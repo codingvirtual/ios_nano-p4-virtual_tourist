@@ -16,7 +16,7 @@ import UIKit
 
 class Photo : NSManagedObject {
 	
-	// set the "nextId" value to the current time in millis. Guarantees no overlap in prior values loaded by CoreData 
+	// set the "nextId" value to the current time in millis. Guarantees no overlap in prior values loaded by CoreData
 	static var nextId = Int(NSDate().timeIntervalSince1970)
 	
 	struct Keys {
@@ -36,77 +36,25 @@ class Photo : NSManagedObject {
 	
 	override init(entity: NSEntityDescription, insertIntoManagedObjectContext context: NSManagedObjectContext?) {
 		super.init(entity: entity, insertIntoManagedObjectContext: context)
-		if filePath == nil {
-			let session = NSURLSession.sharedSession()
-			let url = NSURL(string: self.imagePath)
-			let task = session.downloadTaskWithURL(url!, completionHandler: { data, response, downloadError in
-				if let error = downloadError {
-					print(error)
-				} else {
-					let tempFile = data! as NSURL
-					print(tempFile.path)
-					let fileManager = NSFileManager.defaultManager()
-					let documentsDirectoryURL: NSURL = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask).first!
-					let imageFile = documentsDirectoryURL.URLByAppendingPathComponent((self.id?.stringValue)!)
-					do {
-						try fileManager.moveItemAtURL(tempFile, toURL: imageFile)
-						self.filePath = imageFile.path
-						self.image = UIImage(contentsOfFile: self.filePath!)
-						try context!.save()
-					} catch _ {
-						print("error moving file")
-					}
-				}
-				
-			})
-			task.resume()
-		} else {
-			let documentsDirectoryURL: NSURL = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask).first!
-			let imageFile = documentsDirectoryURL.URLByAppendingPathComponent((self.id?.stringValue)!)
-			self.filePath = imageFile.path
-			self.image = UIImage(contentsOfFile: self.filePath!)
+		if filePath != nil {
+			loadImageDataFromFile()
 		}
 	}
 	
-	convenience init(dictionary: [String : AnyObject], context: NSManagedObjectContext) {
+	init(dictionary: [String : AnyObject], context: NSManagedObjectContext) {
 		
 		// Core Data
 		let entity =  NSEntityDescription.entityForName("Photo", inManagedObjectContext: context)!
-		self.init(entity: entity, insertIntoManagedObjectContext: context)
+		super.init(entity: entity, insertIntoManagedObjectContext: context)
 		
 		// Dictionary
 		imagePath = dictionary[Keys.ImagePath] as! String
 		pin = dictionary[Keys.Pin] as? Pin
-		id = Photo.nextId++
-		filePath = dictionary[Keys.FilePath] as? String
-		if filePath == nil {
-			let session = NSURLSession.sharedSession()
-			let url = NSURL(string: self.imagePath)
-			let task = session.downloadTaskWithURL(url!, completionHandler: { data, response, downloadError in
-				if let error = downloadError {
-					print(error)
-				} else {
-					let tempFile = data! as NSURL
-					print(tempFile.path)
-					let fileManager = NSFileManager.defaultManager()
-					let documentsDirectoryURL: NSURL = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask).first!
-					let imageFile = documentsDirectoryURL.URLByAppendingPathComponent((self.id?.stringValue)!)
-					do {
-						try fileManager.moveItemAtURL(tempFile, toURL: imageFile)
-						self.filePath = imageFile.path
-						self.image = UIImage(contentsOfFile: self.filePath!)
-						try context.save()
-					} catch _ {
-						print("error moving file")
-					}
-				}
-				
-			})
-			task.resume()
-		} else {
-			self.image = UIImage(contentsOfFile: self.filePath!)
+		id = Photo.nextId
+		Photo.nextId = Photo.nextId + 1
+		if filePath != nil {
+			loadImageDataFromFile()
 		}
-		
 	}
 	
 	override func prepareForDeletion() {
@@ -120,5 +68,28 @@ class Photo : NSManagedObject {
 			// add error handling
 		}
 	}
-
+	
+	func loadImageDataFromFile() {
+		let documentsDirectoryURL: NSURL = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask).first!
+		let imageFile = documentsDirectoryURL.URLByAppendingPathComponent((self.id?.stringValue)!)
+		self.filePath = imageFile.path
+		self.image = UIImage(contentsOfFile: self.filePath!)
+	}
+	
+	func fetchImageData(completionHandler: () -> Void) {
+		if let url = NSURL(string: self.imagePath),
+			let imgData = NSData(contentsOfURL: url),
+			let image = UIImage(data: imgData) {
+			self.image = image
+			let documentsDirectoryURL: NSURL = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask).first!
+			let imageFile = documentsDirectoryURL.URLByAppendingPathComponent((self.id?.stringValue)!)
+			do {
+				try imgData.writeToFile(imageFile.path!, options: NSDataWritingOptions.AtomicWrite)
+				self.filePath = imageFile.path
+				completionHandler()
+			} catch _ {
+				print("error creating file")
+			}
+		}
+	}
 }

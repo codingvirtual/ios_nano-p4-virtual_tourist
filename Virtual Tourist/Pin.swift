@@ -19,6 +19,8 @@ import MapKit
 // 2. Make this a subclass of NSManagedObject
 class Pin : NSManagedObject {   // 2.
 	
+	static var maxPhotos = 12
+	
 	struct Keys {
 		static let ID = "id"
 		static let Photos = "photos"
@@ -49,5 +51,4 @@ class Pin : NSManagedObject {   // 2.
 		latitude = dictionary[Keys.Latitude] as! NSNumber
 		longitude = dictionary[Keys.Longitude] as! NSNumber
 	}
-	
 }
