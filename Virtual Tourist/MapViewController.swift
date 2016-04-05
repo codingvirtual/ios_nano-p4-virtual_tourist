@@ -54,9 +54,9 @@ class MapViewController: UIViewController,  MKMapViewDelegate, NSFetchedResultsC
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
-
+		
 	}
-
+	
 	override func viewWillAppear(animated: Bool) {
 		super.viewWillAppear(animated)
 		let defaults = NSUserDefaults.standardUserDefaults()
@@ -115,20 +115,25 @@ class MapViewController: UIViewController,  MKMapViewDelegate, NSFetchedResultsC
 			FlickrService.sharedInstance().taskForImageURLs(newPin) {result, error in
 				if error == nil {
 					if let photosArray = result as? [[String: AnyObject]] {
-						let maxImages = photosArray.count < Pin.maxPhotos ? (photosArray.count - 1) : (Pin.maxPhotos - 1)
-						for index in 0...maxImages {
-							var photoDictionary = photosArray[index] as [String:AnyObject]
-							photoDictionary[Photo.Keys.Pin] = newPin
-							let newPhoto = Photo(dictionary: photoDictionary, context: self.sharedContext)
-							dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0)) {
-								newPhoto.fetchImageData() {
-									dispatch_async(dispatch_get_main_queue(), {
-										do {
-											try self.sharedContext.save()
-										} catch _ {}
-									})
+						if photosArray.count > 0 {
+							let maxImages = photosArray.count < Pin.maxPhotos ? (photosArray.count - 1) : (Pin.maxPhotos - 1)
+							for index in 0...maxImages {
+								var photoDictionary = photosArray[index] as [String:AnyObject]
+								photoDictionary[Photo.Keys.Pin] = newPin
+								let newPhoto = Photo(dictionary: photoDictionary, context: self.sharedContext)
+								dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0)) {
+									newPhoto.fetchImageData() {
+										dispatch_async(dispatch_get_main_queue(), {
+											do {
+												try self.sharedContext.save()
+											} catch _ {}
+										})
+									}
 								}
 							}
+						} else {
+							// no images found
+							print("no images")
 						}
 					}
 				} else {
@@ -155,7 +160,7 @@ class MapViewController: UIViewController,  MKMapViewDelegate, NSFetchedResultsC
 				self.mapView.frame.origin.y -= self.messageField.frame.height
 				self.messageField.frame.origin.y -= self.messageField.frame.height
 			})
-
+			
 		case Mode.Editing:
 			currentMode = Mode.Normal
 			title.replaceCharactersInRange(NSRange(location: 0,length: title.length), withString: "Edit")
@@ -177,8 +182,8 @@ class MapViewController: UIViewController,  MKMapViewDelegate, NSFetchedResultsC
 		// until it receives endUpdates(), and then perform them all at once.
 		print("controller will change content")
 	}
-
-
+	
+	
 	func controller(controller: NSFetchedResultsController, didChangeObject anObject: AnyObject, atIndexPath indexPath: NSIndexPath?, forChangeType type: NSFetchedResultsChangeType, newIndexPath: NSIndexPath?) {
 		print("controller did change object")
 		switch type {
@@ -204,9 +209,9 @@ class MapViewController: UIViewController,  MKMapViewDelegate, NSFetchedResultsC
 		sharedContext.deleteObject(thePin)
 		CoreDataStackManager.sharedInstance().saveContext()
 	}
-
+	
 	// MARK: - MKMapViewDelegate
-
+	
 	func mapView(mapView: MKMapView, didSelectAnnotationView view: MKAnnotationView) {
 		switch currentMode {
 		case Mode.Normal:

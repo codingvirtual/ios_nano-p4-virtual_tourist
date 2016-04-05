@@ -32,6 +32,8 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDataSource, UI
 	
 	@IBOutlet weak var mapView: MKMapView!
 	
+	@IBOutlet weak var noImagesMessage: UILabel!
+	
 	var sharedContext = CoreDataStackManager.sharedInstance().managedObjectContext
 	
 	override func viewDidLoad() {
@@ -44,8 +46,10 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDataSource, UI
 		// Start the fetched results controller
 		do {
 			try fetchedResultsController.performFetch()
-			print("COUNT:")
-			print(fetchedResultsController.fetchedObjects!.count)
+			if fetchedResultsController.fetchedObjects?.count == 0 {
+				self.collectionView.hidden = true
+				self.noImagesMessage.hidden = false
+			}
 		} catch _ {
 			print ("core data error")
 		}
@@ -138,19 +142,32 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDataSource, UI
 		FlickrService.sharedInstance().taskForImageURLs(self.pin) {result, error in
 			if error == nil {
 				if let photosArray = result as? [[String: AnyObject]] {
-					let maxImages = photosArray.count < Pin.maxPhotos ? (photosArray.count - 1) : (Pin.maxPhotos - 1)
-					for index in 0...maxImages {
-						var photoDictionary = photosArray[index] as [String:AnyObject]
-						photoDictionary[Photo.Keys.Pin] = self.pin
-						let newPhoto = Photo(dictionary: photoDictionary, context: self.sharedContext)
-						dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0)) {
-							newPhoto.fetchImageData() {
-								dispatch_async(dispatch_get_main_queue(), {
-									do {
-										try self.sharedContext.save()
-									} catch _ {}
-								})
+					if photosArray.count > 0 {
+						dispatch_async(dispatch_get_main_queue()) {
+							self.collectionView.hidden = false
+							self.noImagesMessage.hidden = true
+						}
+						let maxImages = photosArray.count < Pin.maxPhotos ? (photosArray.count - 1) : (Pin.maxPhotos - 1)
+						for index in 0...maxImages {
+							var photoDictionary = photosArray[index] as [String:AnyObject]
+							photoDictionary[Photo.Keys.Pin] = self.pin
+							let newPhoto = Photo(dictionary: photoDictionary, context: self.sharedContext)
+							dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0)) {
+								newPhoto.fetchImageData() {
+									dispatch_async(dispatch_get_main_queue(), {
+										do {
+											try self.sharedContext.save()
+										} catch _ {}
+									})
+								}
 							}
+						}
+					} else {
+						// handle no images found
+						print("no images")
+						dispatch_async(dispatch_get_main_queue()) {
+							self.collectionView.hidden = true
+							self.noImagesMessage.hidden = false
 						}
 					}
 				}

@@ -106,6 +106,12 @@
                                     <action selector="doPhotoDelete:" destination="Ffu-7v-k6v" eventType="touchUpInside" id="lTc-hN-ai3"/>
                                 </connections>
                             </button>
+                            <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="No Images Found..." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KrY-YS-CDV">
+                                <rect key="frame" x="10" y="290" width="580" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="ijX-is-guY">
                                 <rect key="frame" x="10" y="143" width="580" height="383"/>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
@@ -173,17 +179,21 @@
                         <constraints>
                             <constraint firstItem="ijX-is-guY" firstAttribute="top" secondItem="zwt-cP-MGC" secondAttribute="bottom" constant="123" id="065-xp-C9O"/>
                             <constraint firstItem="Nem-Gl-fZJ" firstAttribute="top" secondItem="zwt-cP-MGC" secondAttribute="bottom" constant="-13" id="2fs-x1-0YN"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="KrY-YS-CDV" secondAttribute="trailing" constant="-10" id="64v-Gl-UDt"/>
                             <constraint firstItem="UAV-Kc-boE" firstAttribute="top" secondItem="ijX-is-guY" secondAttribute="bottom" constant="30" id="6iv-Be-wWs"/>
                             <constraint firstItem="AI8-HS-IIh" firstAttribute="top" secondItem="uXr-eJ-S7b" secondAttribute="bottom" constant="-30" id="Btx-f1-9uD"/>
                             <constraint firstItem="ijX-is-guY" firstAttribute="trailing" secondItem="1If-0v-oqT" secondAttribute="trailingMargin" constant="10" id="I7m-ay-Kcn"/>
+                            <constraint firstItem="KrY-YS-CDV" firstAttribute="centerX" secondItem="1If-0v-oqT" secondAttribute="centerX" id="Ibc-oO-6I7"/>
                             <constraint firstAttribute="trailingMargin" secondItem="Nem-Gl-fZJ" secondAttribute="trailing" constant="-10" id="Nci-Uc-rJx"/>
                             <constraint firstItem="AI8-HS-IIh" firstAttribute="leading" secondItem="1If-0v-oqT" secondAttribute="leading" id="OcD-iW-Qgw"/>
                             <constraint firstItem="UAV-Kc-boE" firstAttribute="top" secondItem="AI8-HS-IIh" secondAttribute="bottom" constant="1" id="Ofi-ab-kyh"/>
                             <constraint firstItem="Nem-Gl-fZJ" firstAttribute="leading" secondItem="1If-0v-oqT" secondAttribute="leadingMargin" constant="-10" id="flA-t6-fjR"/>
                             <constraint firstItem="AI8-HS-IIh" firstAttribute="centerX" secondItem="ijX-is-guY" secondAttribute="centerX" id="oe5-e6-I2l"/>
+                            <constraint firstItem="KrY-YS-CDV" firstAttribute="centerY" secondItem="1If-0v-oqT" secondAttribute="centerY" id="omO-N0-YEM"/>
                             <constraint firstItem="ijX-is-guY" firstAttribute="leading" secondItem="1If-0v-oqT" secondAttribute="leadingMargin" constant="-10" id="pMZ-bg-x7r"/>
                             <constraint firstItem="AI8-HS-IIh" firstAttribute="trailing" secondItem="uXr-eJ-S7b" secondAttribute="trailing" id="sdK-by-im4"/>
                             <constraint firstItem="ijX-is-guY" firstAttribute="top" secondItem="Nem-Gl-fZJ" secondAttribute="bottom" constant="8" symbolic="YES" id="vWx-OQ-DNU"/>
+                            <constraint firstItem="KrY-YS-CDV" firstAttribute="leading" secondItem="1If-0v-oqT" secondAttribute="leadingMargin" constant="-10" id="wUU-j0-wBk"/>
                             <constraint firstItem="AI8-HS-IIh" firstAttribute="leading" secondItem="uXr-eJ-S7b" secondAttribute="leading" id="z8B-xP-qHD"/>
                         </constraints>
                     </view>
@@ -195,6 +205,7 @@
                         <outlet property="buttonNewCollection" destination="AI8-HS-IIh" id="JN1-A0-50J"/>
                         <outlet property="collectionView" destination="ijX-is-guY" id="x9W-Ud-Iam"/>
                         <outlet property="mapView" destination="Nem-Gl-fZJ" id="qU3-8d-YYI"/>
+                        <outlet property="noImagesMessage" destination="KrY-YS-CDV" id="wps-qh-xPP"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="hkz-bK-fAm" userLabel="First Responder" sceneMemberID="firstResponder"/>
