@@ -12,6 +12,8 @@ import MapKit
 
 class MapViewController: UIViewController,  MKMapViewDelegate, NSFetchedResultsControllerDelegate {
 	
+	// TODO: Persist center of map and zoom level
+	
 	// MARK: - Variables and Outlets
 	
 	enum Mode {
@@ -52,10 +54,15 @@ class MapViewController: UIViewController,  MKMapViewDelegate, NSFetchedResultsC
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
+
 	}
 
 	override func viewWillAppear(animated: Bool) {
 		super.viewWillAppear(animated)
+		let defaults = NSUserDefaults.standardUserDefaults()
+		if let data = defaults.objectForKey("camera") as? NSData {
+			self.mapView.camera = NSKeyedUnarchiver.unarchiveObjectWithData(data) as! MKMapCamera
+		}
 		self.title = "Virtual Tourist"
 		// set up any additional UI here
 		do {
@@ -77,8 +84,13 @@ class MapViewController: UIViewController,  MKMapViewDelegate, NSFetchedResultsC
 		for aPin in fetchedResultsController.fetchedObjects as! [Pin] {
 			self.createPin(aPin)
 		}
-
-		
+	}
+	
+	override func viewWillDisappear(animated: Bool) {
+		super.viewWillDisappear(animated)
+		let defaults = NSUserDefaults.standardUserDefaults()
+		let data = NSKeyedArchiver.archivedDataWithRootObject(self.mapView.camera)
+		defaults.setObject(data, forKey: "camera")
 	}
 	// MARK: - UI-related Code
 	
@@ -99,6 +111,7 @@ class MapViewController: UIViewController,  MKMapViewDelegate, NSFetchedResultsC
 				], context: self.sharedContext)
 			sharedContext.insertObject(newPin)
 			// fetch photos here
+			// TODO: Handle if no images are returned
 			FlickrService.sharedInstance().taskForImageURLs(newPin) {result, error in
 				if error == nil {
 					if let photosArray = result as? [[String: AnyObject]] {

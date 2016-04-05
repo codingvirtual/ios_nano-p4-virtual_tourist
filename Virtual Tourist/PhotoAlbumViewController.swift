@@ -134,6 +134,7 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDataSource, UI
 	}
 	
 	func getPhotos() {
+		// TODO: handle if no images are returned
 		FlickrService.sharedInstance().taskForImageURLs(self.pin) {result, error in
 			if error == nil {
 				if let photosArray = result as? [[String: AnyObject]] {
