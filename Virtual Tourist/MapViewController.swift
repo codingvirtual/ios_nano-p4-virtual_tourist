@@ -42,6 +42,8 @@ class MapViewController: UIViewController,  MKMapViewDelegate, NSFetchedResultsC
 	
 	@IBOutlet weak var messageField: UILabel!
 	
+	var activeAnnotation = MKPointAnnotation()
+	
 	var sharedContext: NSManagedObjectContext {
 		return CoreDataStackManager.sharedInstance().managedObjectContext
 	}
@@ -81,13 +83,14 @@ class MapViewController: UIViewController,  MKMapViewDelegate, NSFetchedResultsC
 	// MARK: - UI-related Code
 	
 	@IBAction func handleGesture() {
-		print("long press detected")
 		if longPressRecognizer.state == UIGestureRecognizerState.Began {
-			print("gesture began")
+			let point: CGPoint = longPressRecognizer.locationInView(self.mapView)
+			let locCoords: CLLocationCoordinate2D = self.mapView.convertPoint(point, toCoordinateFromView: mapView)
+			self.activeAnnotation.coordinate = locCoords
+			self.mapView.addAnnotation(activeAnnotation)
 		}
 		if longPressRecognizer.state == UIGestureRecognizerState.Ended {
-			print("now adding annotation")
-
+			self.mapView.removeAnnotation(activeAnnotation)
 			let point: CGPoint = longPressRecognizer.locationInView(self.mapView)
 			let locCoords: CLLocationCoordinate2D = self.mapView.convertPoint(point, toCoordinateFromView: mapView)
 			let newPin = Pin(dictionary: [
@@ -99,7 +102,7 @@ class MapViewController: UIViewController,  MKMapViewDelegate, NSFetchedResultsC
 			FlickrService.sharedInstance().taskForImageURLs(newPin) {result, error in
 				if error == nil {
 					if let photosArray = result as? [[String: AnyObject]] {
-						let maxImages = photosArray.count < Pin.maxPhotos ? photosArray.count : (Pin.maxPhotos - 1)
+						let maxImages = photosArray.count < Pin.maxPhotos ? (photosArray.count - 1) : (Pin.maxPhotos - 1)
 						for index in 0...maxImages {
 							var photoDictionary = photosArray[index] as [String:AnyObject]
 							photoDictionary[Photo.Keys.Pin] = newPin
@@ -121,7 +124,11 @@ class MapViewController: UIViewController,  MKMapViewDelegate, NSFetchedResultsC
 			}
 			CoreDataStackManager.sharedInstance().saveContext()
 		}
-			// TODO: add hold to the recognizer process.
+		if longPressRecognizer.state == UIGestureRecognizerState.Changed {
+			let point: CGPoint = longPressRecognizer.locationInView(self.mapView)
+			let locCoords: CLLocationCoordinate2D = self.mapView.convertPoint(point, toCoordinateFromView: mapView)
+			activeAnnotation.coordinate = locCoords
+		}
 	}
 	
 	@IBAction func enableEditing(sender: AnyObject) {
@@ -184,8 +191,6 @@ class MapViewController: UIViewController,  MKMapViewDelegate, NSFetchedResultsC
 		sharedContext.deleteObject(thePin)
 		CoreDataStackManager.sharedInstance().saveContext()
 	}
-
-	
 
 	// MARK: - MKMapViewDelegate
 

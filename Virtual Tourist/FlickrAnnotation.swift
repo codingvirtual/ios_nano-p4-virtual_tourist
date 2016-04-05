@@ -18,5 +18,4 @@ class FlickrAnnotation : MKPointAnnotation {
 		let coords = CLLocationCoordinate2DMake((withPin.latitude as Double), (withPin.longitude as Double))
 		self.coordinate = coords
 	}
-	
 }

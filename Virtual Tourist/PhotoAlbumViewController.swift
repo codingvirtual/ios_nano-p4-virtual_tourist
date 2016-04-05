@@ -137,7 +137,7 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDataSource, UI
 		FlickrService.sharedInstance().taskForImageURLs(self.pin) {result, error in
 			if error == nil {
 				if let photosArray = result as? [[String: AnyObject]] {
-					let maxImages = photosArray.count < Pin.maxPhotos ? photosArray.count : (Pin.maxPhotos - 1)
+					let maxImages = photosArray.count < Pin.maxPhotos ? (photosArray.count - 1) : (Pin.maxPhotos - 1)
 					for index in 0...maxImages {
 						var photoDictionary = photosArray[index] as [String:AnyObject]
 						photoDictionary[Photo.Keys.Pin] = self.pin
