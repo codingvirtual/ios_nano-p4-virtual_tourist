@@ -95,10 +95,33 @@ class MapViewController: UIViewController,  MKMapViewDelegate, NSFetchedResultsC
 				Pin.Keys.Latitude : locCoords.latitude
 				], context: self.sharedContext)
 			sharedContext.insertObject(newPin)
+			// fetch photos here
+			FlickrService.sharedInstance().taskForImageURLs(newPin) {result, error in
+				if error == nil {
+					if let photosArray = result as? [[String: AnyObject]] {
+						let maxImages = photosArray.count < Pin.maxPhotos ? photosArray.count : (Pin.maxPhotos - 1)
+						for index in 0...maxImages {
+							var photoDictionary = photosArray[index] as [String:AnyObject]
+							photoDictionary[Photo.Keys.Pin] = newPin
+							let newPhoto = Photo(dictionary: photoDictionary, context: self.sharedContext)
+							dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0)) {
+								newPhoto.fetchImageData() {
+									dispatch_async(dispatch_get_main_queue(), {
+										do {
+											try self.sharedContext.save()
+										} catch _ {}
+									})
+								}
+							}
+						}
+					}
+				} else {
+					print("an error occurred returning from fetching image URL's from Flickr")
+				}
+			}
 			CoreDataStackManager.sharedInstance().saveContext()
-
-			// TODO: add hold to the recognizer process.
 		}
+			// TODO: add hold to the recognizer process.
 	}
 	
 	@IBAction func enableEditing(sender: AnyObject) {

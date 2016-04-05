@@ -46,12 +46,6 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDataSource, UI
 		} catch _ {
 			print ("core data error")
 		}
-		
-		if fetchedResultsController.fetchedObjects?.count == 0 {
-			getPhotos()
-		} else {
-			print("pin has stored photos")
-		}
 	}
 	// Layout the collection view
 	
@@ -92,12 +86,11 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDataSource, UI
 		
 		for aPhoto in photosToDelete {
 			sharedContext.deleteObject(aPhoto)
-		}
-		
-		do {
-			try sharedContext.save()
-		} catch _ {
-			print("error saving context")
+			do {
+				try sharedContext.save()
+			} catch _ {
+				print("error saving context")
+			}
 		}
 		
 		selectedIndexes = [NSIndexPath]()
@@ -109,27 +102,50 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDataSource, UI
 	// MARK: - Configure Cell
 	
 	func configureCell(cell: PhotosCollectionViewCell, atIndexPath indexPath: NSIndexPath) {
-		cell.activityIndicator.hidden = false
-		cell.activityIndicator.startAnimating()
-		cell.imageView!.hidden = true
 		let photo = fetchedResultsController.objectAtIndexPath(indexPath) as! Photo
+		
+		if photo.image == nil {
+			print("no image")
+			cell.imageView!.hidden = true
+			cell.activityIndicator!.hidden = false
+			cell.activityIndicator!.startAnimating()
+		} else {
+			cell.imageView!.image = photo.image
+			cell.imageView!.hidden = false
+			cell.activityIndicator.stopAnimating()
+			
+		}
 		
 		if let _ = selectedIndexes.indexOf(indexPath) {
 			cell.imageView.alpha = 0.25
 		} else {
 			cell.imageView.alpha = 1.0
 		}
-		
-		dispatch_async(dispatch_get_main_queue()) {
-			cell.imageView!.hidden = false
-			cell.imageView!.image = photo.image
-		}
-		
 	}
 	
 	func getPhotos() {
-
-		FlickrService.sharedInstance().taskForResource(self.pin, usingContext: self.sharedContext) {result, error in
+		FlickrService.sharedInstance().taskForImageURLs(self.pin) {result, error in
+			if error == nil {
+				if let photosArray = result as? [[String: AnyObject]] {
+					let maxImages = photosArray.count < Pin.maxPhotos ? photosArray.count : (Pin.maxPhotos - 1)
+					for index in 0...maxImages {
+						var photoDictionary = photosArray[index] as [String:AnyObject]
+						photoDictionary[Photo.Keys.Pin] = self.pin
+						let newPhoto = Photo(dictionary: photoDictionary, context: self.sharedContext)
+						dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0)) {
+							newPhoto.fetchImageData() {
+								dispatch_async(dispatch_get_main_queue(), {
+									do {
+										try self.sharedContext.save()
+									} catch _ {}
+								})
+							}
+						}
+					}
+				}
+			} else {
+				print("an error occurred returning from fetching image URL's from Flickr")
+			}
 		}
 	}
 	// MARK: - UICollectionView
@@ -165,9 +181,6 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDataSource, UI
 			print("added to selectedIndexes")
 		}
 		
-		// FIXME: if you delete photos then try to hit New Collection, it blows up. Need to actually delete the photos from
-		// the context below to prevent dangling reference later.
-		print(selectedIndexes.count)
 		if selectedIndexes.count == 0 {
 			buttonNewCollection.hidden = false
 			buttonDelete.hidden = true
@@ -272,5 +285,4 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDataSource, UI
 	}
 	
 	// MARK: - Actions and Helpers
-	
 }

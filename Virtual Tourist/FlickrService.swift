@@ -38,7 +38,7 @@ class FlickrService : NSObject {
 	
 	// MARK: - All purpose task method for data
 	
-	func taskForResource(withPin: Pin, usingContext: NSManagedObjectContext, completionHandler: CompletionHander) -> NSURLSessionDataTask {
+	func taskForImageURLs(withPin: Pin, completionHandler: CompletionHander) -> NSURLSessionDataTask {
 		
 		let BASE_URL = "https://api.flickr.com/services/rest/"
 		let METHOD_NAME = "flickr.photos.search"
@@ -73,7 +73,7 @@ class FlickrService : NSObject {
 				completionHandler(result: nil, error: error)
 			} else {
 				print("Step 3 - taskForResource's completionHandler is invoked.")
-				FlickrService.parseJSONWithCompletionHandler(data!, usingContext: usingContext, withPin: withPin, completionHandler: completionHandler)
+				FlickrService.parseJSONWithCompletionHandler(data!, withPin: withPin, completionHandler: completionHandler)
 			}
 		}
 	
@@ -95,7 +95,7 @@ class FlickrService : NSObject {
 	
 	// Parsing the JSON
 	
-	class func parseJSONWithCompletionHandler(data: NSData, usingContext: NSManagedObjectContext,  withPin: Pin, completionHandler: CompletionHander) {
+	class func parseJSONWithCompletionHandler(data: NSData, withPin: Pin, completionHandler: CompletionHander) {
 		var parsingError: NSError? = nil
 		
 		let parsedResult: AnyObject?
@@ -111,43 +111,12 @@ class FlickrService : NSObject {
 		} else {
 			print("Step 4 - parseJSONWithCompletionHandler is invoked.")
 			if let photosDictionary = parsedResult!.valueForKey("photos") as? [String:AnyObject] {
-				
-				var totalPhotosVal = 0
-				if let totalPhotos = photosDictionary["total"] as? String {
-					totalPhotosVal = (totalPhotos as NSString).integerValue
-				}
-				
-				if totalPhotosVal > 12 {
-					totalPhotosVal = 12
-				}
-				if totalPhotosVal > 0 {
-					if let photosArray = photosDictionary["photo"] as? [[String: AnyObject]] {
-						
-						var photosCount = 11
-						if photosCount > photosArray.count {
-							photosCount = photosArray.count
-						}
-						
-						// TODO: handle if there are no photos at all
-						
-						for index in 0...photosCount {
-							var photoDictionary = photosArray[index] as [String: AnyObject]
-							
-							photoDictionary[Photo.Keys.Pin] = withPin
-							let photo = Photo(dictionary: photoDictionary, context: usingContext)
-							photo.pin = withPin
-							CoreDataStackManager.sharedInstance().saveContext()
-						}
-					} else {
-						print("Cant find key 'photo' in \(photosDictionary)")
-					}
-				} else {
-					
+				if let photosArray = photosDictionary["photo"] as? [[String: AnyObject]] {
+					completionHandler(result: photosArray, error: nil)
 				}
 			} else {
-				print("Cant find key 'photos' in \(parsedResult)")
+				completionHandler(result: nil, error: NSError(domain: "NoPhotos", code: -100, userInfo: nil))
 			}
-			completionHandler(result: parsedResult, error: nil)
 		}
 	}
 	
