@@ -129,7 +129,7 @@
                                                         <accessibilityTraits key="traits" image="YES" notEnabled="YES"/>
                                                     </accessibility>
                                                 </imageView>
-                                                <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" hidesWhenStopped="YES" animating="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="UZh-Sj-rZq">
+                                                <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" animating="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="UZh-Sj-rZq">
                                                     <rect key="frame" x="47" y="44" width="20" height="20"/>
                                                 </activityIndicatorView>
                                             </subviews>
@@ -138,8 +138,10 @@
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <constraints>
                                             <constraint firstAttribute="bottom" secondItem="5Kc-5m-ogI" secondAttribute="bottom" id="7Hi-sH-KzM"/>
+                                            <constraint firstItem="UZh-Sj-rZq" firstAttribute="centerY" secondItem="5Kc-5m-ogI" secondAttribute="centerY" id="Gzf-WD-hms"/>
                                             <constraint firstItem="5Kc-5m-ogI" firstAttribute="leading" secondItem="eN8-QH-CEM" secondAttribute="leading" id="IrZ-5D-Tbf"/>
                                             <constraint firstItem="5Kc-5m-ogI" firstAttribute="top" secondItem="eN8-QH-CEM" secondAttribute="top" id="cQM-kw-KRg"/>
+                                            <constraint firstItem="UZh-Sj-rZq" firstAttribute="centerX" secondItem="5Kc-5m-ogI" secondAttribute="centerX" id="eq2-3k-vEd"/>
                                             <constraint firstAttribute="trailing" secondItem="5Kc-5m-ogI" secondAttribute="trailing" id="rQN-We-g8y"/>
                                         </constraints>
                                         <connections>
@@ -160,18 +162,28 @@
                                     <action selector="getNewCollection:" destination="Ffu-7v-k6v" eventType="touchUpInside" id="hXb-Xi-heA"/>
                                 </connections>
                             </button>
+                            <mapView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" mapType="standard" zoomEnabled="NO" scrollEnabled="NO" rotateEnabled="NO" pitchEnabled="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Nem-Gl-fZJ">
+                                <rect key="frame" x="10" y="7" width="580" height="128"/>
+                                <connections>
+                                    <outlet property="delegate" destination="Ffu-7v-k6v" id="wxD-N6-1ra"/>
+                                </connections>
+                            </mapView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="ijX-is-guY" firstAttribute="top" secondItem="zwt-cP-MGC" secondAttribute="bottom" constant="123" id="065-xp-C9O"/>
+                            <constraint firstItem="Nem-Gl-fZJ" firstAttribute="top" secondItem="zwt-cP-MGC" secondAttribute="bottom" constant="-13" id="2fs-x1-0YN"/>
                             <constraint firstItem="UAV-Kc-boE" firstAttribute="top" secondItem="ijX-is-guY" secondAttribute="bottom" constant="30" id="6iv-Be-wWs"/>
                             <constraint firstItem="AI8-HS-IIh" firstAttribute="top" secondItem="uXr-eJ-S7b" secondAttribute="bottom" constant="-30" id="Btx-f1-9uD"/>
                             <constraint firstItem="ijX-is-guY" firstAttribute="trailing" secondItem="1If-0v-oqT" secondAttribute="trailingMargin" constant="10" id="I7m-ay-Kcn"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="Nem-Gl-fZJ" secondAttribute="trailing" constant="-10" id="Nci-Uc-rJx"/>
                             <constraint firstItem="AI8-HS-IIh" firstAttribute="leading" secondItem="1If-0v-oqT" secondAttribute="leading" id="OcD-iW-Qgw"/>
                             <constraint firstItem="UAV-Kc-boE" firstAttribute="top" secondItem="AI8-HS-IIh" secondAttribute="bottom" constant="1" id="Ofi-ab-kyh"/>
+                            <constraint firstItem="Nem-Gl-fZJ" firstAttribute="leading" secondItem="1If-0v-oqT" secondAttribute="leadingMargin" constant="-10" id="flA-t6-fjR"/>
                             <constraint firstItem="AI8-HS-IIh" firstAttribute="centerX" secondItem="ijX-is-guY" secondAttribute="centerX" id="oe5-e6-I2l"/>
                             <constraint firstItem="ijX-is-guY" firstAttribute="leading" secondItem="1If-0v-oqT" secondAttribute="leadingMargin" constant="-10" id="pMZ-bg-x7r"/>
                             <constraint firstItem="AI8-HS-IIh" firstAttribute="trailing" secondItem="uXr-eJ-S7b" secondAttribute="trailing" id="sdK-by-im4"/>
+                            <constraint firstItem="ijX-is-guY" firstAttribute="top" secondItem="Nem-Gl-fZJ" secondAttribute="bottom" constant="8" symbolic="YES" id="vWx-OQ-DNU"/>
                             <constraint firstItem="AI8-HS-IIh" firstAttribute="leading" secondItem="uXr-eJ-S7b" secondAttribute="leading" id="z8B-xP-qHD"/>
                         </constraints>
                     </view>
@@ -182,6 +194,7 @@
                         <outlet property="buttonDelete" destination="uXr-eJ-S7b" id="nrf-sF-1Cg"/>
                         <outlet property="buttonNewCollection" destination="AI8-HS-IIh" id="JN1-A0-50J"/>
                         <outlet property="collectionView" destination="ijX-is-guY" id="x9W-Ud-Iam"/>
+                        <outlet property="mapView" destination="Nem-Gl-fZJ" id="qU3-8d-YYI"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="hkz-bK-fAm" userLabel="First Responder" sceneMemberID="firstResponder"/>

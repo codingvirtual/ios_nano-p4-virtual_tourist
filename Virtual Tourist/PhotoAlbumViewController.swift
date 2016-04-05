@@ -9,6 +9,7 @@
 import Foundation
 import UIKit
 import CoreData
+import MapKit
 
 class PhotoAlbumViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, NSFetchedResultsControllerDelegate {
 	
@@ -29,6 +30,8 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDataSource, UI
 	
 	@IBOutlet weak var buttonDelete: UIButton!
 	
+	@IBOutlet weak var mapView: MKMapView!
+	
 	var sharedContext = CoreDataStackManager.sharedInstance().managedObjectContext
 	
 	override func viewDidLoad() {
@@ -46,7 +49,14 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDataSource, UI
 		} catch _ {
 			print ("core data error")
 		}
+		
+		let coords: CLLocationCoordinate2D = CLLocationCoordinate2D(latitude: pin.latitude as Double, longitude: pin.longitude as Double)
+		let annotation = MKPointAnnotation()
+		annotation.coordinate = coords
+		self.mapView.addAnnotation(annotation)
+		self.mapView.setCenterCoordinate(coords, animated: false)
 	}
+	
 	// Layout the collection view
 	
 	override func viewDidLayoutSubviews() {
