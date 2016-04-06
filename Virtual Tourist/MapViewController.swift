@@ -117,8 +117,14 @@ class MapViewController: UIViewController,  MKMapViewDelegate, NSFetchedResultsC
 					if let photosArray = result as? [[String: AnyObject]] {
 						if photosArray.count > 0 {
 							let maxImages = photosArray.count < Pin.maxPhotos ? (photosArray.count - 1) : (Pin.maxPhotos - 1)
-							for index in 0...maxImages {
-								var photoDictionary = photosArray[index] as [String:AnyObject]
+							var randomIndexStartingPoint = 0
+							var lastImage = maxImages
+							if photosArray.count > Pin.maxPhotos - 1 {
+								let upperBound = photosArray.count - Pin.maxPhotos - 1
+								randomIndexStartingPoint = Int(arc4random_uniform(UInt32(upperBound))) - 1
+							}
+							lastImage = randomIndexStartingPoint + maxImages
+							for index in randomIndexStartingPoint...lastImage {								var photoDictionary = photosArray[index] as [String:AnyObject]
 								photoDictionary[Photo.Keys.Pin] = newPin
 								let newPhoto = Photo(dictionary: photoDictionary, context: self.sharedContext)
 								dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0)) {

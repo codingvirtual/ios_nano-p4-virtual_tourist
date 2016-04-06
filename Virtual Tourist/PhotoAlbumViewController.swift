@@ -148,7 +148,14 @@ class PhotoAlbumViewController: UIViewController, UICollectionViewDataSource, UI
 							self.noImagesMessage.hidden = true
 						}
 						let maxImages = photosArray.count < Pin.maxPhotos ? (photosArray.count - 1) : (Pin.maxPhotos - 1)
-						for index in 0...maxImages {
+						var randomIndexStartingPoint = 0
+						var lastImage = maxImages
+						if photosArray.count > Pin.maxPhotos - 1 {
+							let upperBound = photosArray.count - Pin.maxPhotos - 1
+							randomIndexStartingPoint = Int(arc4random_uniform(UInt32(upperBound)))
+						}
+						lastImage = randomIndexStartingPoint + maxImages
+						for index in randomIndexStartingPoint...lastImage {
 							var photoDictionary = photosArray[index] as [String:AnyObject]
 							photoDictionary[Photo.Keys.Pin] = self.pin
 							let newPhoto = Photo(dictionary: photoDictionary, context: self.sharedContext)
